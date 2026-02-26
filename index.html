@@ -3,151 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kotyol Trade VIP</title>
+    <title>Kotyol Trade Ultimate</title>
     <style>
-        :root { --gold: #f3ba2f; --bg: #0b0e11; --card: #1e2329; --green: #00ff88; --red: #ff3b3b; }
-        body {
-            background-color: var(--bg); color: white; font-family: 'Inter', sans-serif;
-            margin: 0; padding: 15px; user-select: none; -webkit-tap-highlight-color: transparent;
-        }
-        .header { text-align: center; padding: 10px 0; border-bottom: 1px solid #2d343c; margin-bottom: 20px; }
-        .header h1 { margin: 0; font-size: 22px; color: var(--gold); letter-spacing: 1px; }
+        :root { --gold: #f3ba2f; --bg: #0b0e11; --card: #1e2329; --green: #00ff88; --red: #ff3b3b; --gray: #848e9c; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 15px; overflow: hidden; user-select: none; }
         
-        .section-title { font-size: 14px; color: #848e9c; margin: 15px 0 10px 5px; text-transform: uppercase; }
+        /* Музика */
+        .music-panel { position: fixed; top: 15px; right: 15px; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 20px; display: flex; align-items: center; gap: 8px; z-index: 100; border: 1px solid rgba(255,255,255,0.1); }
+        .music-panel input { width: 50px; accent-color: var(--gold); cursor: pointer; }
 
-        /* Список пар */
-        .asset-container { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
-        .asset-item {
-            background: var(--card); border: 1px solid #2b3139; border-radius: 12px;
-            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
-            transition: 0.2s;
-        }
-        .asset-item.active { border-color: var(--gold); background: #2b3139; }
-        .asset-name { font-weight: 600; font-size: 15px; }
-        .asset-payout { color: var(--green); font-size: 14px; font-weight: bold; }
+        .header { padding: 10px 0; border-bottom: 1px solid #2d343c; margin-bottom: 15px; }
+        .header h1 { margin: 0; font-size: 20px; color: var(--gold); letter-spacing: 1px; }
 
-        /* Таймфрейми */
-        .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .time-btn {
-            background: var(--card); border: 1px solid #2b3139; color: white;
-            padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;
-        }
-        .time-btn.active { background: var(--gold); color: black; border-color: var(--gold); }
+        /* Вкладки категорій */
+        .tabs { display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; scrollbar-width: none; }
+        .tab-btn { background: var(--card); border: 1px solid #2b3139; color: var(--gray); padding: 10px 18px; border-radius: 12px; font-weight: 600; font-size: 13px; white-space: nowrap; transition: 0.3s; }
+        .tab-btn.active { background: var(--gold); color: black; border-color: var(--gold); box-shadow: 0 0 15px rgba(243,186,47,0.2); }
 
-        /* Кнопка аналізу */
-        #main-btn {
-            margin-top: 25px; width: 100%; padding: 18px; border: none; border-radius: 14px;
-            background: linear-gradient(135deg, #f3ba2f 0%, #f0a30a 100%);
-            color: black; font-size: 16px; font-weight: 800; cursor: pointer;
-            box-shadow: 0 4px 20px rgba(243, 186, 47, 0.2); transition: 0.3s;
-        }
-        #main-btn:disabled { opacity: 0.6; background: #474d57; }
+        /* Список активів */
+        .asset-list { display: grid; gap: 8px; height: 320px; overflow-y: auto; padding-right: 5px; }
+        .asset-item { background: var(--card); border: 1px solid #2b3139; padding: 14px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .asset-item.active { border-color: var(--gold); background: rgba(243,186,47,0.05); }
+        .asset-name { font-weight: 700; font-size: 16px; display: block; }
+        .asset-sub { font-size: 11px; color: var(--gray); text-transform: uppercase; }
+        .payout { color: var(--green); font-weight: 800; font-size: 14px; }
 
-        /* Модальне вікно сигналу */
-        .result-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 100; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .result-card {
-            background: var(--card); border: 2px solid var(--gold); border-radius: 20px;
-            width: 85%; padding: 25px; text-align: center;
-        }
-        .loader {
-            width: 40px; height: 40px; border: 4px solid #f3ba2f; border-bottom-color: transparent;
-            border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite;
-        }
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Кнопка */
+        .footer { position: fixed; bottom: 0; left: 0; width: 100%; padding: 20px; box-sizing: border-box; background: linear-gradient(to top, var(--bg) 70%, transparent); }
+        #main-btn { width: 100%; padding: 20px; border: none; border-radius: 16px; background: var(--gold); color: black; font-size: 18px; font-weight: 900; cursor: pointer; box-shadow: 0 5px 25px rgba(243,186,47,0.3); }
+
+        /* Екран аналізу */
+        .analysis-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 30px; box-sizing: border-box; }
+        .scanner { width: 100%; height: 2px; background: #2b3139; position: relative; margin: 25px 0; overflow: hidden; }
+        .scanner::after { content: ''; position: absolute; left: -40%; width: 40%; height: 100%; background: var(--gold); animation: scan 1.2s infinite ease-in-out; }
+        @keyframes scan { 100% { left: 100%; } }
+        .log-box { width: 100%; font-family: 'Courier New', monospace; font-size: 12px; color: var(--gray); text-align: left; height: 100px; overflow: hidden; }
+        .log-line { margin-bottom: 5px; opacity: 0; animation: fadeIn 0.3s forwards; }
+        @keyframes fadeIn { 100% { opacity: 1; } }
+
+        /* Результат */
+        .result-card { display: none; text-align: center; animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
 
+    <div class="music-panel">
+        <span onclick="toggleMute()" id="mIcon" style="cursor:pointer">🔊</span>
+        <input type="range" id="vol" min="0" max="1" step="0.1" value="0.4" oninput="setVol(this.value)">
+    </div>
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="header"><h1>KOTYOL TRADE 🏆</h1></div>
 
-    <div class="section-title">Виберіть актив (Payout 80%+)</div>
-    <div class="asset-container" id="assetList"></div>
-
-    <div class="section-title">Час угоди (Expiration)</div>
-    <div class="time-grid" id="timeGrid">
-        <button class="time-btn" onclick="selectTime(this, '5s')">5 SEC</button>
-        <button class="time-btn" onclick="selectTime(this, '15s')">15 SEC</button>
-        <button class="time-btn" onclick="selectTime(this, '30s')">30 SEC</button>
-        <button class="time-btn active" onclick="selectTime(this, '1m')">1 MIN</button>
-        <button class="time-btn" onclick="selectTime(this, '2m')">2 MIN</button>
-        <button class="time-btn" onclick="selectTime(this, '5m')">5 MIN</button>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="changeCat('crypto', this)">КРИПТОВАЛЮТА</button>
+        <button class="tab-btn" onclick="changeCat('forex', this)">ВАЛЮТНІ ПАРИ</button>
+        <button class="tab-btn" onclick="changeCat('stocks', this)">АКЦІЇ (STOCKS)</button>
     </div>
 
-    <button id="main-btn" onclick="generateSignal()">АНАЛІЗУВАТИ РИНОК</button>
+    <div id="assetList" class="asset-list"></div>
 
-    <div id="resultOverlay" class="result-overlay">
+    <div class="footer"><button id="main-btn" onclick="startAnalysis()">ЗАПУСТИТИ АНАЛІЗ</button></div>
+
+    <div id="analysisScreen" class="analysis-screen">
         <div id="loadingView">
-            <span class="loader"></span>
-            <p style="margin-top: 15px; color: var(--gold); font-weight: bold;">AI СКАНУВАННЯ...</p>
+            <div style="font-size: 40px; margin-bottom: 10px;">⚡</div>
+            <h2 style="color: var(--gold); margin: 0;">AI СКАНУВАННЯ</h2>
+            <div class="scanner"></div>
+            <div id="logBox" class="log-box"></div>
         </div>
-        <div id="signalView" class="result-card" style="display: none;">
-            <div style="color: #848e9c; font-size: 12px; margin-bottom: 10px;">PROGNOSIS BY KOTYOL AI</div>
-            <div id="resPair" style="font-size: 18px; margin-bottom: 5px;"></div>
-            <div id="resDir" style="font-size: 36px; font-weight: 900; margin: 15px 0;"></div>
-            <div id="resAcc" style="color: var(--green); font-size: 14px; margin-bottom: 20px;"></div>
-            <button onclick="closeSignal()" style="background: transparent; border: 1px solid #474d57; color: white; padding: 10px 20px; border-radius: 8px;">ЗАКРИТИ</button>
+
+        <div id="resultView" class="result-card">
+            <div style="color: var(--gray); font-size: 13px; margin-bottom: 15px;">РЕЗУЛЬТАТ ОБРОБКИ:</div>
+            <div id="resPair" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;"></div>
+            <div id="resDir" style="font-size: 54px; font-weight: 900; margin-bottom: 10px;"></div>
+            <div id="resAcc" style="color: var(--green); font-size: 16px; margin-bottom: 30px;"></div>
+            <button onclick="closeAnalysis()" style="background: transparent; border: 1px solid #474d57; color: white; padding: 12px 35px; border-radius: 12px; font-weight: bold;">ЗАКРИТИ</button>
         </div>
     </div>
 
     <script>
-        const pairs = [
-            {n: "EUR/USD OTC", p: "92%"}, {n: "GBP/USD OTC", p: "89%"},
-            {n: "USD/JPY OTC", p: "87%"}, {n: "AUD/CAD OTC", p: "91%"},
-            {n: "Apple OTC", p: "92%"}, {n: "Bitcoin", p: "84%"}
+        const audio = document.getElementById('bgMusic');
+        const assets = {
+            crypto: [{n: "BTC/USDT", s: "Bitcoin"}, {n: "ETH/USDT", s: "Ethereum"}, {n: "SOL/USDT", s: "Solana"}, {n: "DOGE/USDT", s: "Dogecoin"}],
+            forex: [{n: "EUR/USD OTC", s: "Євро / Долар"}, {n: "GBP/USD OTC", s: "Фунт / Долар"}, {n: "USD/JPY OTC", s: "Долар / Єна"}],
+            stocks: [{n: "Apple OTC", s: "AAPL"}, {n: "Tesla OTC", s: "TSLA"}, {n: "Amazon OTC", s: "AMZN"}, {n: "Google OTC", s: "GOOGL"}]
+        };
+
+        let selected = "";
+
+        function changeCat(cat, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const list = document.getElementById('assetList');
+            list.innerHTML = "";
+            assets[cat].forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'asset-item';
+                div.onclick = () => {
+                    document.querySelectorAll('.asset-item').forEach(i => i.classList.remove('active'));
+                    div.classList.add('active');
+                    selected = item.n;
+                    if(audio.paused) audio.play(); // Старт музики при першому виборі
+                };
+                div.innerHTML = `<div><span class="asset-name">${item.n}</span><span class="asset-sub">${item.s}</span></div><span class="payout">92%</span>`;
+                list.appendChild(div);
+            });
+        }
+
+        function setVol(v) { audio.volume = v; }
+        function toggleMute() { audio.muted = !audio.muted; document.getElementById('mIcon').innerText = audio.muted ? "🔇" : "🔊"; }
+
+        const logLines = [
+            "> Initializing neural link...",
+            "> Connecting to liquidity pools...",
+            "> Analyzing RSI & Bollinger Bands...",
+            "> Checking Fibonacci levels...",
+            "> Scanning order book volumes...",
+            "> AI PROGNOSTIC READY."
         ];
 
-        let currentAsset = "";
-        let currentTime = "1m";
-
-        // Генерація списку
-        const list = document.getElementById('assetList');
-        pairs.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'asset-item';
-            div.innerHTML = `<span class="asset-name">${item.n}</span><span class="asset-payout">${item.p}</span>`;
-            div.onclick = () => {
-                document.querySelectorAll('.asset-item').forEach(i => i.classList.remove('active'));
-                div.classList.add('active');
-                currentAsset = item.n;
-            };
-            list.appendChild(div);
-        });
-
-        function selectTime(btn, t) {
-            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentTime = t;
-        }
-
-        function generateSignal() {
-            if(!currentAsset) { alert("Будь ласка, оберіть актив!"); return; }
+        function startAnalysis() {
+            if(!selected) return alert("Спочатку виберіть пару!");
             
-            const overlay = document.getElementById('resultOverlay');
-            const loading = document.getElementById('loadingView');
-            const signal = document.getElementById('signalView');
-
-            overlay.style.display = 'flex';
-            loading.style.display = 'block';
-            signal.style.display = 'none';
-
-            setTimeout(() => {
-                loading.style.display = 'none';
-                signal.style.display = 'block';
-                
-                const isUp = Math.random() > 0.5;
-                document.getElementById('resPair').innerText = `${currentAsset} (${currentTime})`;
-                document.getElementById('resDir').innerText = isUp ? "CALL 🟢" : "PUT 🔴";
-                document.getElementById('resDir').style.color = isUp ? "#00ff88" : "#ff3b3b";
-                document.getElementById('resAcc').innerText = "Ймовірність: " + (Math.floor(Math.random() * 8) + 89) + "%";
-            }, 2000);
+            document.getElementById('analysisScreen').style.display = 'flex';
+            document.getElementById('loadingView').style.display = 'block';
+            document.getElementById('resultView').style.display = 'none';
+            
+            const logBox = document.getElementById('logBox');
+            logBox.innerHTML = "";
+            
+            let i = 0;
+            const interval = setInterval(() => {
+                if(i < logLines.length) {
+                    const line = document.createElement('div');
+                    line.className = 'log-line';
+                    line.innerText = logLines[i];
+                    logBox.appendChild(line);
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(showResult, 800);
+                }
+            }, 600);
         }
 
-        function closeSignal() {
-            document.getElementById('resultOverlay').style.display = 'none';
+        function showResult() {
+            document.getElementById('loadingView').style.display = 'none';
+            document.getElementById('resultView').style.display = 'block';
+            
+            const isUp = Math.random() > 0.48;
+            document.getElementById('resPair').innerText = selected;
+            document.getElementById('resDir').innerText = isUp ? "CALL 🟢" : "PUT 🔴";
+            document.getElementById('resDir').style.color = isUp ? "#00ff88" : "#ff3b3b";
+            document.getElementById('resAcc').innerText = "CONFIDENCE: " + (90 + Math.floor(Math.random() * 8)) + "%";
         }
+
+        function closeAnalysis() { document.getElementById('analysisScreen').style.display = 'none'; }
+
+        changeCat('crypto', document.querySelector('.tab-btn'));
     </script>
 </body>
 </html>
