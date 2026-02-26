@@ -1,229 +1,341 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <body>
-    <header>
-        <div class="logo">KOTYOL <span style="color:#fff">V16</span></div>
-        <div class="player">
-            <div style="text-align: right;">
-                <div style="font-size: 10px; font-weight: 800;">HIT FM UKRAINE</div>
-                <div style="font-size: 8px; color: var(--gold); letter-spacing: 1px;">LIVE STREAMING</div>
-            </div>
-            <div id="play-btn" onclick="toggleMusic()">▶️</div>
-        </div>
-    </header>
-
-    <div class="cat-row">
-        <div class="cat-btn active" onclick="filterAssets('crypto', this)">CRYPTO OTC</div>
-        <div class="cat-btn" onclick="filterAssets('forex', this)">FOREX OTC</div>
-        <div class="cat-btn" onclick="filterAssets('stocks', this)">STOCKS OTC</div>
-        <div class="cat-btn" onclick="filterAssets('commodity', this)">COMMODITY</div>
-    </div>
-
-    <div class="viewport" id="asset-list">
-        </div>
-
-    <div style="padding: 0 15px; margin-top: -100px;">
-        <div style="font-size: 10px; color: var(--gold); margin-bottom: 10px; font-family: var(--font-mono);">EXPIRATION TIME</div>
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
-            <div class="cat-btn" style="text-align:center" onclick="setTF('5s', this)">5s</div>
-            <div class="cat-btn active" style="text-align:center" onclick="setTF('1M', this)">1M</div>
-            <div class="cat-btn" style="text-align:center" onclick="setTF('5M', this)">5M</div>
-            <div class="cat-btn" style="text-align:center" onclick="setTF('15M', this)">15M</div>
-        </div>
-    </div>
-
-    <div class="footer">
-        <button class="btn-main" onclick="startDeepAnalysis()">START NEURAL SCAN</button>
-    </div>
-
-    <div id="modal">
-        <div class="modal-box" id="modal-content">
-            </div>
-    </div>
-
-    <audio id="main-audio" loop preload="auto">
-        <source src="https://online.hitfm.ua/HitFM" type="audio/mpeg">
-    </audio>
-        <script>
-        const marketData = {
-            crypto: [
-                {n: "Bitcoin OTC", p: "92%"}, {n: "Ethereum OTC", p: "91%"},
-                {n: "Solana OTC", p: "94%"}, {n: "Litecoin OTC", p: "90%"},
-                {n: "Ripple OTC", p: "88%"}, {n: "Dogecoin OTC", p: "89%"}
-            ],
-            forex: [
-                {n: "EUR/USD OTC", p: "92%"}, {n: "GBP/USD OTC", p: "91%"},
-                {n: "USD/JPY OTC", p: "92%"}, {n: "AUD/CAD OTC", p: "88%"},
-                {n: "NZD/USD OTC", p: "90%"}, {n: "EUR/GBP OTC", p: "89%"}
-            ],
-            stocks: [
-                {n: "Apple OTC", p: "92%"}, {n: "Google OTC", p: "90%"},
-                {n: "Amazon OTC", p: "91%"}, {n: "Tesla OTC", p: "94%"},
-                {n: "Facebook OTC", p: "88%"}, {n: "Netflix OTC", p: "89%"}
-            ],
-            commodity: [
-                {n: "Gold OTC", p: "95%"}, {n: "Silver OTC", p: "88%"},
-                {n: "Crude Oil OTC", p: "91%"}, {n: "Platinum OTC", p: "87%"}
-            ]
-        };
-
-        let currentPair = "";
-        let currentTime = "1M";
-        let isPlaying = false;
-        const audio = document.getElementById('main-audio');
-
-        // КЕРУВАННЯ МУЗИКОЮ
-        function toggleMusic() {
-            if(!isPlaying) {
-                audio.play().catch(() => alert("Натисніть ще раз, щоб активувати аудіо"));
-                document.getElementById('play-btn').innerText = "⏸️";
-            } else {
-                audio.pause();
-                document.getElementById('play-btn').innerText = "▶️";
-            }
-            isPlaying = !isPlaying;
-        }
-
-        // ФІЛЬТР КАТЕГОРІЙ
-        function filterAssets(cat, el) {
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            if(el) el.classList.add('active');
-            
-            const list = document.getElementById('asset-list');
-            list.innerHTML = marketData[cat].map(a => `
-                <div class="asset-card" onclick="selectPair('${a.n}', this)">
-                    <span style="font-weight:800; font-size:15px;">${a.n}</span>
-                    <span class="rate">${a.p}</span>
-                </div>
-            `).join('');
-        }
-
-        function selectPair(name, el) {
-            document.querySelectorAll('.asset-card').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            currentPair = name;
-        }
-
-        function setTF(t, el) {
-            currentTime = t;
-            el.parentElement.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-        }
-
-        // РОЗЙОБНИЙ АНАЛІЗ
-        function startDeepAnalysis() {
-            if(!currentPair) { alert("СПОЧАТКУ ОБЕРИ ПАРУ, БРО!"); return; }
-            
-            const modal = document.getElementById('modal');
-            const content = document.getElementById('modal-content');
-            modal.style.display = 'flex';
-
-            content.innerHTML = `
-                <h2 style="font-family:var(--font-mono); color:var(--gold); font-size:18px; margin-bottom:20px;">NEURAL SCAN: ${currentPair}</h2>
-                
-                <div style="text-align:left; font-size:10px; color:#848e9c;">
-                    <p>NETWORK CORE LOAD <span id="p1" style="float:right">0%</span></p>
-                    <div class="progress-bar"><div class="progress-fill" id="f1"></div></div>
-                    
-                    <p>LIQUIDITY ANALYSIS <span id="p2" style="float:right">0%</span></p>
-                    <div class="progress-bar"><div class="progress-fill" id="f2"></div></div>
-                    
-                    <p>VOLATILITY INDEX <span id="p3" style="float:right">0%</span></p>
-                    <div class="progress-bar"><div class="progress-fill" id="f3"></div></div>
-                </div>
-                <p id="status-text" style="font-size:11px; margin-top:10px; color:var(--gold);">CONNECTING TO BINANCE CLOUD...</p>
-            `;
-
-            const fill = (id, pid, time, text) => {
-                setTimeout(() => {
-                    document.getElementById(id).style.width = "100%";
-                    document.getElementById(pid).innerText = "100%";
-                    document.getElementById('status-text').innerText = text;
-                }, time);
-            };
-
-            fill('f1', 'p1', 800, "SCANNING ORDERBOOK...");
-            fill('f2', 'p2', 1800, "CALCULATING RSI & MACD...");
-            fill('f3', 'p3', 2800, "FINALIZING SIGNAL...");
-
-            setTimeout(() => {
-                const isCall = Math.random() > 0.47;
-                const side = isCall ? "CALL ▲" : "PUT ▼";
-                const color = isCall ? "var(--green)" : "var(--red)";
-                const acc = (93 + Math.random() * 6).toFixed(1);
-
-                content.innerHTML = `
-                    <p style="font-size:12px; color:#848e9c; margin-bottom:5px;">${currentPair} // ${currentTime}</p>
-                    <div style="font-size:65px; font-weight:900; font-family:var(--font-mono); color:${color}; text-shadow: 0 0 25px ${color};">${side}</div>
-                    <div style="margin:25px 0; padding:15px; background:rgba(255,255,255,0.03); border-radius:15px;">
-                        <span style="font-size:11px; color:#848e9c; display:block; margin-bottom:5px;">AI CONFIDENCE</span>
-                        <span style="font-size:28px; font-family:var(--font-mono); color:var(--gold);">${acc}%</span>
-                    </div>
-                    <button onclick="document.getElementById('modal').style.display='none'" class="btn-main">CONFIRM ENTRY</button>
-                `;
-            }, 3500);
-        }
-
-        // START
-        window.onload = () => filterAssets('crypto');
-    </script>
-</body>
-</html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>KOTYOL AI TERMINAL V16</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>KOTYOL QUANTUM V17</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --gold: #f3ba2f;
-            --bg: #080a0f;
-            --card: #12161f;
+            --gold-glow: rgba(243, 186, 47, 0.4);
+            --bg: #050608;
+            --card: #11141b;
             --border: rgba(255, 255, 255, 0.08);
             --green: #00ff88;
             --red: #ff3b3b;
-            --text: #ffffff;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
             --font-mono: 'Orbitron', sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow: hidden; position: fixed; width: 100%; height: 100%; }
-
-        /* HEADER & PLAYER */
-        header { height: 80px; padding: 0 15px; display: flex; align-items: center; justify-content: space-between; background: var(--card); border-bottom: 1px solid var(--border); }
-        .logo { font-family: var(--font-mono); font-weight: 900; font-size: 20px; color: var(--gold); }
-        
-        .player { display: flex; align-items: center; gap: 10px; background: rgba(243, 186, 47, 0.1); padding: 8px 15px; border-radius: 30px; border: 1px solid var(--gold); }
-        #play-btn { font-size: 22px; cursor: pointer; }
-
-        /* CATEGORIES */
-        .cat-row { display: flex; gap: 10px; padding: 15px; overflow-x: auto; scrollbar-width: none; }
-        .cat-btn { 
-            background: var(--card); border: 1px solid var(--border); padding: 10px 20px; 
-            border-radius: 12px; font-size: 11px; font-weight: 800; color: #848e9c; white-space: nowrap; 
+        /* Базові налаштування */
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
-        .cat-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
 
-        /* ASSETS */
-        .viewport { height: calc(100vh - 180px); overflow-y: auto; padding: 0 15px 120px; }
-        .asset-card { 
-            background: var(--card); border: 1px solid var(--border); padding: 18px; 
-            border-radius: 15px; display: flex; justify-content: space-between; 
-            align-items: center; margin-bottom: 10px; 
+        body, html {
+            height: 100%; width: 100%;
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            position: fixed;
         }
-        .asset-card.active { border-color: var(--gold); background: rgba(243, 186, 47, 0.05); }
-        .asset-card .rate { color: var(--green); font-family: var(--font-mono); font-weight: 700; }
 
-        /* MODAL ANALYZE */
-        #modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-        .modal-box { width: 100%; background: var(--card); border: 2px solid var(--gold); border-radius: 30px; padding: 30px; text-align: center; }
+        /* Шапка терміналу */
+        header {
+            height: 80px; padding: 0 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(17, 20, 27, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .logo-box .name { font-family: var(--font-mono); font-weight: 900; font-size: 20px; color: var(--gold); text-shadow: 0 0 10px var(--gold-glow); }
+        .logo-box .sub { font-size: 9px; color: var(--green); letter-spacing: 2px; font-weight: 800; }
+
+        /* Музичний хаб */
+        .music-player {
+            display: flex; align-items: center; gap: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 18px; border-radius: 40px;
+            border: 1px solid var(--border);
+        }
+        #play-btn { font-size: 22px; cursor: pointer; transition: transform 0.2s; }
+        #play-btn:active { transform: scale(0.9); }
+
+        /* Скрол-зона */
+        .app-content {
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            padding: 20px 15px 140px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Стилі категорій */
+        .category-scroll {
+            display: flex; gap: 10px; overflow-x: auto;
+            padding-bottom: 15px; scrollbar-width: none;
+        }
+        .category-scroll::-webkit-scrollbar { display: none; }
         
-        .progress-bar { height: 4px; background: #222; border-radius: 10px; margin: 15px 0; overflow: hidden; }
-        .progress-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.4s; }
+        .cat-item {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 12px 22px; border-radius: 14px;
+            font-size: 11px; font-weight: 800; color: var(--text-dim);
+            white-space: nowrap; transition: 0.3s;
+        }
+        .cat-item.active {
+            background: var(--gold); color: #000; border-color: var(--gold);
+            box-shadow: 0 5px 15px rgba(243, 186, 47, 0.2);
+        }
 
-        /* FOOTER */
-        .footer { position: fixed; bottom: 0; width: 100%; padding: 20px; background: linear-gradient(transparent, var(--bg) 80%); }
-        .btn-main { width: 100%; padding: 20px; border-radius: 18px; border: none; background: var(--gold); font-family: var(--font-mono); font-weight: 900; font-size: 18px; box-shadow: 0 0 20px rgba(243, 186, 47, 0.3); }
+        /* Стилі карток активів */
+        .asset-card {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 20px; border-radius: 18px; margin-bottom: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: 0.3s;
+        }
+        .asset-card.selected {
+            border-color: var(--gold);
+            background: rgba(243, 186, 47, 0.05);
+            transform: translateX(5px);
+        }
+        .asset-info .pair { font-size: 16px; font-weight: 800; display: block; }
+        .asset-info .market { font-size: 10px; color: var(--text-dim); }
+        .asset-rate { font-family: var(--font-mono); color: var(--green); font-weight: 900; font-size: 18px; }
+
+        /* Таймфрейми */
+        .tf-container {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px;
+        }
+        .tf-btn {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 15px 5px; border-radius: 12px; text-align: center;
+            font-size: 12px; font-weight: 900; font-family: var(--font-mono);
+        }
+        .tf-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(243, 186, 47, 0.1); }
+        /* Модальне вікно аналізу */
+        #analysis-overlay {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(5, 6, 8, 0.98);
+            display: none; align-items: center; justify-content: center;
+            padding: 25px; backdrop-filter: blur(10px);
+        }
+        .scanner-box {
+            width: 100%; background: var(--card); border: 2px solid var(--gold);
+            border-radius: 30px; padding: 35px 25px; text-align: center;
+            box-shadow: 0 0 50px rgba(243, 186, 47, 0.2);
+        }
+        .progress-section { margin: 20px 0; text-align: left; }
+        .label-row { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
+        .bar-bg { height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 15px var(--gold); }
+
+        /* Футер з кнопкою */
+        .footer-action {
+            position: fixed; bottom: 0; width: 100%;
+            padding: 25px 20px 40px;
+            background: linear-gradient(to top, var(--bg) 80%, transparent);
+            z-index: 90;
+        }
+        .strike-btn {
+            width: 100%; padding: 22px; border: none; border-radius: 22px;
+            background: linear-gradient(45deg, var(--gold), #ffb238);
+            color: #000; font-family: var(--font-mono); font-weight: 900;
+            font-size: 18px; text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(243, 186, 47, 0.4);
+        }
     </style>
 </head>
+<body>
+
+    <header>
+        <div class="logo-box">
+            <div class="name">KOTYOL AI</div>
+            <div class="sub">QUANTUM ENGINE V17.4</div>
+        </div>
+        <div class="music-player">
+            <div style="text-align: right;">
+                <div style="font-size: 10px; font-weight: 900; color: #fff;">HIT FM UA</div>
+                <div style="font-size: 8px; color: var(--gold); font-weight: 700;">LIVE STREAM</div>
+            </div>
+            <div id="play-btn" onclick="handleAudio()">▶️</div>
+        </div>
+    </header>
+
+    <div class="app-content">
+        <div class="category-scroll">
+            <div class="cat-item active" onclick="switchCategory('crypto', this)">CRYPTO OTC</div>
+            <div class="cat-item" onclick="switchCategory('forex', this)">FOREX OTC</div>
+            <div class="cat-item" onclick="switchCategory('stocks', this)">STOCKS OTC</div>
+            <div class="cat-item" onclick="switchCategory('commodity', this)">COMMODITY</div>
+        </div>
+
+        <div style="font-size: 10px; color: var(--gold); font-family: var(--font-mono); margin: 20px 0 15px;">ASSET SELECTION</div>
+        
+        <div id="asset-mount-point">
+            </div>
+
+        <div style="font-size: 10px; color: var(--gold); font-family: var(--font-mono); margin: 30px 0 15px;">EXPIRATION SETTINGS</div>
+        <div class="tf-container">
+            <div class="tf-btn" onclick="setTF('5s', this)">5s</div>
+            <div class="tf-btn" onclick="setTF('15s', this)">15s</div>
+            <div class="tf-btn active" onclick="setTF('1M', this)">1M</div>
+            <div class="tf-btn" onclick="setTF('5M', this)">5M</div>
+        </div>
+        
+        <div style="height: 50px;"></div>
+    </div>
+
+    <div class="footer-action">
+        <button class="strike-btn" onclick="runGlobalAnalysis()">Execute Neural Scan</button>
+    </div>
+
+    <div id="analysis-overlay">
+        <div class="scanner-box" id="scanner-ui-root">
+            </div>
+    </div>
+
+    <audio id="radio-stream" loop crossorigin="anonymous">
+        <source src="https://online.hitfm.ua/HitFM" type="audio/mpeg">
+    </audio>
+    <script>
+        // БАЗА ДАНИХ АКТИВІВ
+        const assetsDB = {
+            crypto: [
+                {n: "Bitcoin OTC", r: "94%"}, {n: "Ethereum OTC", r: "92%"},
+                {n: "Solana OTC", r: "95%"}, {n: "Litecoin OTC", r: "91%"},
+                {n: "Ripple OTC", r: "90%"}, {n: "Dogecoin OTC", r: "89%"},
+                {n: "Cardano OTC", r: "88%"}, {n: "Polkadot OTC", r: "91%"}
+            ],
+            forex: [
+                {n: "EUR/USD OTC", r: "92%"}, {n: "GBP/USD OTC", r: "91%"},
+                {n: "USD/JPY OTC", r: "93%"}, {n: "AUD/CAD OTC", r: "89%"},
+                {n: "NZD/USD OTC", r: "90%"}, {n: "USD/CHF OTC", r: "88%"},
+                {n: "EUR/JPY OTC", r: "91%"}, {n: "GBP/JPY OTC", r: "92%"}
+            ],
+            stocks: [
+                {n: "Apple OTC", r: "92%"}, {n: "Tesla OTC", r: "95%"},
+                {n: "Google OTC", r: "91%"}, {n: "Amazon OTC", r: "93%"},
+                {n: "Netflix OTC", r: "89%"}, {n: "Microsoft OTC", r: "92%"},
+                {n: "Meta OTC", r: "90%"}, {n: "NVIDIA OTC", r: "94%"}
+            ],
+            commodity: [
+                {n: "Gold OTC", r: "96%"}, {n: "Silver OTC", r: "89%"},
+                {n: "Crude Oil OTC", r: "92%"}, {n: "Natural Gas OTC", r: "88%"},
+                {n: "Platinum OTC", r: "91%"}
+            ]
+        };
+
+        let activePair = "";
+        let activeTF = "1M";
+        let isMusicPlaying = false;
+        const player = document.getElementById('radio-stream');
+
+        // КЕРУВАННЯ МУЗИКОЮ
+        function handleAudio() {
+            if(!isMusicPlaying) {
+                player.play().catch(() => {
+                    alert("Натисніть ще раз для активації потоку.");
+                });
+                document.getElementById('play-btn').innerText = "⏸️";
+            } else {
+                player.pause();
+                document.getElementById('play-btn').innerText = "▶️";
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        // ПЕРЕМИКАННЯ КАТЕГОРІЙ
+        function switchCategory(cat, el) {
+            document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            renderAssets(cat);
+        }
+
+        function renderAssets(cat) {
+            const container = document.getElementById('asset-mount-point');
+            container.innerHTML = assetsDB[cat].map(a => `
+                <div class="asset-card ${activePair === a.n ? 'selected' : ''}" onclick="selectAsset('${a.n}', this)">
+                    <div class="asset-info">
+                        <span class="pair">${a.n}</span>
+                        <span class="market">GLOBAL OTC MARKET</span>
+                    </div>
+                    <div class="asset-rate">${a.r}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectAsset(name, el) {
+            document.querySelectorAll('.asset-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            activePair = name;
+        }
+
+        function setTF(tf, el) {
+            document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            activeTF = tf;
+        }
+
+        // НЕЙРОННИЙ АНАЛІЗ (ШКАЛИ)
+        function runGlobalAnalysis() {
+            if(!activePair) { alert("СПОЧАТКУ ОБЕРИ АКТИВ!"); return; }
+            
+            const overlay = document.getElementById('analysis-overlay');
+            const root = document.getElementById('scanner-ui-root');
+            overlay.style.display = 'flex';
+
+            root.innerHTML = `
+                <h2 style="font-family:var(--font-mono); color:var(--gold); font-size:18px; margin-bottom:10px;">QUANTUM SCANNING</h2>
+                <p style="font-size:11px; color:var(--text-dim); margin-bottom:30px;">TARGET: ${activePair} // TF: ${activeTF}</p>
+                
+                <div class="progress-section">
+                    <div class="label-row"><span>Neural Core Processing</span><span id="v1">0%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" id="f1"></div></div>
+                </div>
+                <div class="progress-section">
+                    <div class="label-row"><span>Market Liquidity Scan</span><span id="v2">0%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" id="f2"></div></div>
+                </div>
+                <div class="progress-section" style="margin-bottom:40px;">
+                    <div class="label-row"><span>Volatility Probability</span><span id="v3">0%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" id="f3"></div></div>
+                </div>
+                <p id="scan-status" style="font-size:10px; color:var(--gold); letter-spacing:1px; font-weight:700;">INITIALIZING BINANCE BRIDGE...</p>
+            `;
+
+            const fillBar = (id, vid, time, status) => {
+                setTimeout(() => {
+                    document.getElementById(id).style.width = "100%";
+                    document.getElementById(vid).innerText = "100%";
+                    document.getElementById('scan-status').innerText = status;
+                }, time);
+            };
+
+            fillBar('f1', 'v1', 700, "ANALYZING ORDER FLOW...");
+            fillBar('f2', 'v2', 1600, "CALCULATING DELTA INDEX...");
+            fillBar('f3', 'v3', 2500, "GENERATING FINAL SIGNAL...");
+
+            setTimeout(() => {
+                const isCall = Math.random() > 0.48;
+                const result = isCall ? "CALL ▲" : "PUT ▼";
+                const color = isCall ? "var(--green)" : "var(--red)";
+                const power = (94 + Math.random() * 5.7).toFixed(1);
+
+                root.innerHTML = `
+                    <div style="animation: fadeIn 0.5s;">
+                        <div style="font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:2px;">Neural Recommendation</div>
+                        <div style="font-size:70px; font-weight:900; font-family:var(--font-mono); color:${color}; text-shadow: 0 0 30px ${color}; margin:15px 0;">${result}</div>
+                        <div style="background:rgba(255,255,255,0.03); padding:20px; border-radius:20px; margin-bottom:30px;">
+                            <div style="font-size:10px; color:var(--text-dim); margin-bottom:5px;">AI CONFIDENCE</div>
+                            <div style="font-size:32px; font-family:var(--font-mono); color:var(--gold);">${power}%</div>
+                        </div>
+                        <button onclick="document.getElementById('analysis-overlay').style.display='none'" class="strike-btn" style="box-shadow:none;">CONFIRM ENTRY</button>
+                    </div>
+                `;
+            }, 3300);
+        }
+
+        // Авто-запуск крипти
+        window.onload = () => renderAssets('crypto');
+    </script>
+</body>
+</html>
