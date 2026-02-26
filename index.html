@@ -3,320 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>KOTYOL ELITE V9 - TURBO</title>
+    <title>KOTYOL ULTRA ELITE V10</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --gold: #f3ba2f;
-            --dark-bg: #080a0c;
-            --card-bg: #161a1e;
+            --dark: #050608;
+            --card: #121519;
             --border: #2b3139;
             --green: #00ff88;
             --red: #ff3b3b;
-            --blue: #3498db;
-            --text-main: #ffffff;
-            --text-dim: #94a3b8;
+            --text: #ffffff;
+            --dim: #848e9c;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; font-family: 'Inter', sans-serif; }
 
-        body, html { 
-            height: 100%; width: 100%; background: var(--dark-bg); 
-            color: var(--text-main); overflow: hidden; position: fixed; 
+        body { 
+            background: var(--dark); color: var(--text); 
+            height: 100vh; overflow: hidden; position: fixed; width: 100%;
         }
 
-        .wrapper { display: flex; flex-direction: column; height: 100vh; width: 100%; }
-
-        /* ПЛЕЄР В ШАПЦІ */
+        /* HEADER & PLAYER */
         .header {
-            height: 70px; background: var(--card-bg); border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 15px; flex-shrink: 0; z-index: 100;
+            height: 80px; background: var(--card); border-bottom: 1px solid var(--border);
+            display: flex; flex-direction: column; justify-content: center; padding: 0 15px;
+            z-index: 100; position: relative;
         }
 
-        .music-mini-player {
-            display: flex; align-items: center; gap: 10px;
-            background: rgba(255,255,255,0.05); padding: 5px 12px;
-            border-radius: 20px; border: 1px solid var(--border);
+        .top-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .logo { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; color: var(--gold); }
+
+        .player-box {
+            display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.3);
+            padding: 5px 10px; border-radius: 30px; border: 1px solid var(--border);
+        }
+        .track-name { font-size: 10px; color: var(--gold); white-space: nowrap; overflow: hidden; width: 120px; text-overflow: ellipsis; }
+        
+        /* SCROLL ZONE */
+        .main-scroll {
+            height: calc(100vh - 180px); overflow-y: auto; padding: 15px;
+            -webkit-overflow-scrolling: touch; padding-bottom: 100px;
         }
 
-        .track-info { font-size: 10px; max-width: 80px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--gold); }
-
-        /* СКРОЛ-КОНТЕЙНЕР */
-        .main-content {
-            flex: 1; overflow-y: auto; padding-bottom: 160px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* КАРТКА СТАТИСТИКИ (NEW) */
-        .stats-row {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px;
-        }
-        .stat-card {
-            background: var(--card-bg); padding: 15px; border-radius: 12px;
-            border-left: 3px solid var(--gold);
+        /* VIP STATS */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-item { 
+            background: var(--card); padding: 15px; border-radius: 15px; 
+            border-bottom: 2px solid var(--gold); 
         }
         .stat-val { font-family: 'Orbitron'; font-size: 18px; color: var(--green); }
-        .stat-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; }
+        .stat-lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; margin-top: 5px; }
 
-        /* СЕКЦІЇ */
-        .section-header { 
-            padding: 20px 15px 10px; font-size: 11px; font-weight: 800; 
-            color: var(--gold); letter-spacing: 2px; text-transform: uppercase;
+        /* CATEGORIES */
+        .cat-row { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 5px; }
+        .cat-btn { 
+            background: #1c2127; padding: 10px 15px; border-radius: 8px; 
+            font-size: 11px; font-weight: 800; white-space: nowrap; color: var(--dim);
         }
+        .cat-btn.active { background: var(--gold); color: #000; }
 
-        /* ТАЙМФРЕЙМИ (TURBO) */
-        .time-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 15px;
+        /* ASSETS */
+        .asset-list { display: flex; flex-direction: column; gap: 8px; }
+        .asset-item {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 16px; border-radius: 12px; display: flex; justify-content: space-between;
         }
-        .time-btn {
-            background: #1c2127; border: 1px solid var(--border);
-            padding: 12px 2px; border-radius: 8px; text-align: center;
-            font-size: 10px; font-weight: 700;
-        }
-        .time-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(243, 186, 47, 0.1); }
-        .turbo { color: #ff9f43; border-color: rgba(255, 159, 67, 0.3); }
+        .asset-item.selected { border-color: var(--gold); background: rgba(243,186,47,0.05); }
 
-        /* ІНДИКАТОРИ (NEW) */
-        .indicators-box {
-            margin: 0 15px; background: #0f1216; border: 1px solid var(--border);
-            border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px;
+        /* TIMEFRAMES */
+        .section-title { font-size: 11px; color: var(--gold); font-weight: 900; margin: 20px 0 10px; text-transform: uppercase; }
+        .tf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .tf-btn { 
+            background: #1c2127; border: 1px solid var(--border); padding: 12px 5px;
+            border-radius: 10px; text-align: center; font-size: 11px; font-weight: 800;
         }
-        .ind-item { display: flex; justify-content: space-between; font-size: 12px; }
-        .ind-val { font-weight: 800; font-family: 'Orbitron'; }
+        .tf-btn.active { border-color: var(--gold); color: var(--gold); }
+        .tf-turbo { color: #ff9f43; border-color: rgba(255,159,67,0.4); }
 
-        /* ФУТЕР */
+        /* INDICATORS */
+        .ind-box { background: #0a0c10; border-radius: 15px; padding: 15px; margin-top: 10px; }
+        .ind-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; }
+        .ind-v { font-family: 'Orbitron'; font-weight: 700; }
+
+        /* FOOTER BUTTON */
         .footer {
-            position: fixed; bottom: 0; width: 100%; padding: 20px 15px;
-            background: linear-gradient(transparent, var(--dark-bg) 40%); z-index: 500;
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            padding: 20px 15px; background: linear-gradient(transparent, var(--dark) 50%);
+            z-index: 200;
         }
-        .main-btn {
-            width: 100%; padding: 22px; border-radius: 18px; border: none;
-            background: var(--gold); color: #000; font-family: 'Orbitron';
-            font-weight: 900; font-size: 18px; box-shadow: 0 8px 30px rgba(243,186,47,0.4);
+        .btn-main {
+            width: 100%; padding: 22px; border-radius: 20px; border: none;
+            background: linear-gradient(45deg, var(--gold), #ff9f43);
+            color: #000; font-family: 'Orbitron'; font-weight: 900; font-size: 18px;
+            box-shadow: 0 10px 30px rgba(243, 186, 47, 0.3);
         }
 
-        .hidden { display: none !important; }
+        /* MODAL */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.98);
+            z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-content {
+            background: var(--card); width: 100%; border-radius: 30px;
+            padding: 40px 20px; text-align: center; border: 2px solid var(--gold);
+        }
+
+        /* UTILS */
+        .hidden { display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div class="wrapper" id="main-app">
-        <header class="header">
-            <div class="logo" style="font-family:'Orbitron'; font-weight:900; font-size:16px;">
-                KOTYOL <span style="color:var(--gold)">V9</span>
+    <div class="header">
+        <div class="top-line">
+            <div class="logo">KOTYOL <span>ULTRA</span></div>
+            <div class="player-box">
+                <div class="track-name" id="track-title">Spotify Ukraine: Top 100...</div>
+                <button onclick="handleMusic()" id="m-btn" style="background:none; border:none; color:var(--gold); font-size:18px;">▶️</button>
             </div>
-            
-            <div class="music-mini-player">
-                <div class="track-info" id="current-track">Spotify Top 100...</div>
-                <button onclick="toggleMusic()" id="play-pause-btn" style="background:none; border:none; color:var(--gold); font-size:16px;">▶️</button>
-                <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" style="width:40px; accent-color:var(--gold);">
-            </div>
-        </header>
-
-        <main class="main-content">
-            <div class="stats-row">
-                <div class="stat-card">
-                    <div class="stat-label">Daily Profit</div>
-                    <div class="stat-val">+$1,420</div>
-                </div>
-                <div class="stat-card" style="border-left-color: var(--blue);">
-                    <div class="stat-label">Win Rate</div>
-                    <div class="stat-val" style="color:var(--blue)">94.2%</div>
-                </div>
-            </div>
-
-            <div class="section-header">Market Selection</div>
-            <div id="cat-mount" style="display:flex; gap:10px; padding:0 15px; overflow-x:auto;">
-                </div>
-
-            <div class="section-header">Active Assets</div>
-            <div id="assets-mount" style="padding:0 15px; display:flex; flex-direction:column; gap:8px;">
-                </div>
-
-            <div class="section-header">Turbo Timeframes</div>
-            <div class="time-grid">
-                <div class="time-btn turbo" onclick="setTime('5s', this)">5 SEC</div>
-                <div class="time-btn turbo" onclick="setTime('15s', this)">15 SEC</div>
-                <div class="time-btn active" onclick="setTime('1M', this)">1 MIN</div>
-                <div class="time-btn" onclick="setTime('5M', this)">5 MIN</div>
-            </div>
-
-            <div class="section-header">Technical Analysis</div>
-            <div class="indicators-box">
-                <div class="ind-item">
-                    <span>RSI (14):</span>
-                    <span class="ind-val" id="ind-rsi" style="color:var(--green)">OVERBOUGHT</span>
-                </div>
-                <div class="ind-item">
-                    <span>MA (200):</span>
-                    <span class="ind-val" id="ind-ma" style="color:var(--red)">BEARISH</span>
-                </div>
-                <div class="ind-item">
-                    <span>Volatility:</span>
-                    <span class="ind-val" id="ind-vol" style="color:var(--gold)">HIGH</span>
-                </div>
-            </div>
-        </main>
-
-        <footer class="footer">
-            <button class="main-btn" onclick="startAnalysis()">GENERATE SIGNAL</button>
-        </footer>
+        </div>
+        <input type="range" id="vol" min="0" max="1" step="0.1" value="0.5" style="width:100%; accent-color:var(--gold); height:4px;">
     </div>
 
-    <audio id="bg-music" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
-<script>
-    // 1. КОНФІГУРАЦІЯ АКТИВІВ ТА ПЛЕЙЛИСТА
-    const config = {
-        assets: {
-            otc: [
-                {n: "EUR/USD OTC", p: "92%"}, {n: "GBP/USD OTC", p: "91%"},
-                {n: "USD/JPY OTC", p: "92%"}, {n: "AUD/CAD OTC", p: "89%"}
-            ],
-            crypto: [
-                {n: "BTC/USDT", p: "94%"}, {n: "ETH/USDT", p: "91%"},
-                {n: "SOL/USDT", p: "95%"}, {n: "DOGE/USDT", p: "88%"}
-            ]
-        },
-        playlist: [
-            {n: "Spotify Top #1 - Blinding Lights", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
-            {n: "Spotify Top #2 - Starboy", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
-            {n: "Spotify Top #3 - Heat Waves", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"}
-        ]
-    };
+    <div class="main-scroll">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-val">+$2,840</div>
+                <div class="stat-lbl">Session Profit</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-val" style="color:var(--gold)">98.1%</div>
+                <div class="stat-lbl">AI Winrate</div>
+            </div>
+        </div>
 
-    let state = {
-        pair: "",
-        time: "1M",
-        isPlaying: false,
-        trackIndex: 0
-    };
+        <div class="section-title">Market Selection</div>
+        <div class="cat-row" id="cat-list"></div>
 
-    // 2. МУЗИЧНИЙ ПЛЕЄР (SPOTIFY STYLE)
-    const audio = document.getElementById('bg-music');
-    const playBtn = document.getElementById('play-pause-btn');
-    const trackLabel = document.getElementById('current-track');
-    const volSlider = document.getElementById('volume-slider');
+        <div class="section-title">Active Assets</div>
+        <div class="asset-list" id="asset-mount"></div>
 
-    function toggleMusic() {
-        if (state.isPlaying) {
-            audio.pause();
-            playBtn.innerText = "▶️";
-        } else {
-            audio.play().catch(e => console.log("User interaction needed"));
-            playBtn.innerText = "⏸️";
+        <div class="section-title">Turbo Timeframes</div>
+        <div class="tf-grid">
+            <div class="tf-btn tf-turbo" onclick="setTF('5s', this)">5s</div>
+            <div class="tf-btn tf-turbo" onclick="setTF('15s', this)">15s</div>
+            <div class="tf-btn active" onclick="setTF('1M', this)">1M</div>
+            <div class="tf-btn" onclick="setTF('5M', this)">5M</div>
+        </div>
+
+        <div class="section-title">AI Technical Pulse</div>
+        <div class="ind-box">
+            <div class="ind-row"><span>RSI (14)</span><span class="ind-v" id="rsi-v">--</span></div>
+            <div class="ind-row"><span>Trend Power</span><span class="ind-v" id="trend-v">--</span></div>
+            <div class="ind-row"><span>Volatility</span><span class="ind-v" id="vol-v">MEDIUM</span></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <button class="btn-main" onclick="analyze()">ANALYZE SIGNAL</button>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content" id="m-content">
+            <div class="spinner" style="width:50px; height:50px; border:4px solid #2b3139; border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; margin: 0 auto 20px;"></div>
+            <h2 style="font-family:'Orbitron';">NEURAL SCANNING...</h2>
+        </div>
+    </div>
+
+    <audio id="player" loop></audio>
+
+    <script>
+        const data = {
+            otc: [{n:"EUR/USD OTC",p:"92%"}, {n:"GBP/USD OTC",p:"91%"}, {n:"USD/JPY OTC",p:"92%"}, {n:"AUD/CAD OTC",p:"89%"}],
+            crypto: [{n:"BTC/USDT",p:"96%"}, {n:"ETH/USDT",p:"92%"}, {n:"SOL/USDT",p:"94%"}, {n:"PEPE/USDT",p:"88%"}],
+            stocks: [{n:"Apple OTC",p:"92%"}, {n:"Tesla OTC",p:"91%"}, {n:"Amazon OTC",p:"90%"}]
+        };
+
+        const tracks = [
+            {n:"SKYLERR - Вечорниці", s:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
+            {n:"YAKTAK - Погляд", s:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
+            {n:"Spotify UA: Top 100", s:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"}
+        ];
+
+        let selP = "", selT = "1M", isP = false;
+        const audio = document.getElementById('player');
+
+        // MUSIC
+        function handleMusic() {
+            if(!isP) {
+                const r = tracks[Math.floor(Math.random()*tracks.length)];
+                audio.src = r.s;
+                document.getElementById('track-title').innerText = r.n;
+                audio.play();
+                document.getElementById('m-btn').innerText = "⏸️";
+            } else {
+                audio.pause();
+                document.getElementById('m-btn').innerText = "▶️";
+            }
+            isP = !isP;
         }
-        state.isPlaying = !state.isPlaying;
-    }
+        document.getElementById('vol').oninput = (e) => audio.volume = e.target.value;
 
-    volSlider.oninput = (e) => { audio.volume = e.target.value; };
+        // LOGIC
+        function init() {
+            const cl = document.getElementById('cat-list');
+            Object.keys(data).forEach((cat, i) => {
+                const b = document.createElement('div');
+                b.className = `cat-btn ${i===0?'active':''}`;
+                b.innerText = cat.toUpperCase();
+                b.onclick = () => switchC(cat, b);
+                cl.appendChild(b);
+            });
+            switchC('otc', cl.firstChild);
+        }
 
-    // Авто-перемикання треків
-    audio.onended = () => {
-        state.trackIndex = (state.trackIndex + 1) % config.playlist.length;
-        audio.src = config.playlist[state.trackIndex].src;
-        trackLabel.innerText = config.playlist[state.trackIndex].n;
-        audio.play();
-    };
-
-    // 3. РОБОТА З РИНКАМИ ТА ІНДИКАТОРАМИ
-    function renderMarkets() {
-        const mount = document.getElementById('cat-mount');
-        mount.innerHTML = Object.keys(config.assets).map(cat => `
-            <div class="cat-btn ${cat === 'otc' ? 'active' : ''}" onclick="switchCat('${cat}', this)">
-                ${cat.toUpperCase()}
-            </div>
-        `).join('');
-        switchCat('otc', mount.firstChild);
-    }
-
-    function switchCat(cat, el) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        
-        const assetsMount = document.getElementById('assets-mount');
-        assetsMount.innerHTML = config.assets[cat].map(item => `
-            <div class="asset-card" onclick="selectPair('${item.n}', this)">
-                <span class="asset-name">${item.n}</span>
-                <span class="asset-perc">${item.p}</span>
-            </div>
-        `).join('');
-    }
-
-    function selectPair(name, el) {
-        document.querySelectorAll('.asset-card').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-        state.pair = name;
-        updateIndicators(); // Оновлюємо RSI/MA під пару
-    }
-
-    function setTime(t, el) {
-        document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        state.time = t;
-    }
-
-    // 4. ДИНАМІЧНІ ІНДИКАТОРИ (Рандомна логіка під виглядом AI)
-    function updateIndicators() {
-        const rsi = document.getElementById('ind-rsi');
-        const ma = document.getElementById('ind-ma');
-        
-        const rsiVal = Math.floor(Math.random() * 100);
-        if(rsiVal > 70) { rsi.innerText = "OVERBOUGHT"; rsi.style.color = "var(--red)"; }
-        else if(rsiVal < 30) { rsi.innerText = "OVERSOLD"; rsi.style.color = "var(--green)"; }
-        else { rsi.innerText = "NEUTRAL"; rsi.style.color = "var(--gold)"; }
-
-        ma.innerText = Math.random() > 0.5 ? "BULLISH TREND" : "BEARISH TREND";
-        ma.style.color = ma.innerText.includes("BULLISH") ? "var(--green)" : "var(--red)";
-    }
-
-    // 5. ГЕНЕРАЦІЯ СИГНАЛУ
-    function startAnalysis() {
-        if (!state.pair) return alert("ОБЕРИ ВАЛЮТНУ ПАРУ!");
-
-        const btn = document.querySelector('.main-btn');
-        btn.innerText = "SCANNING...";
-        btn.disabled = true;
-
-        // Створюємо оверлей сигналу
-        const overlay = document.createElement('div');
-        overlay.style = "position:fixed; inset:0; background:rgba(0,0,0,0.98); z-index:2000; display:flex; align-items:center; justify-content:center;";
-        overlay.innerHTML = `<div style="text-align:center;">
-            <div class="loader-circle" style="width:60px; height:60px; border:4px solid #2b3139; border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; margin:0 auto 20px;"></div>
-            <p style="font-family:'Orbitron';">AI CALCULATION...</p>
-        </div>`;
-        document.body.appendChild(overlay);
-
-        setTimeout(() => {
-            const isUp = Math.random() > 0.47;
-            const acc = 89 + Math.floor(Math.random() * 8);
-            
-            overlay.innerHTML = `
-                <div style="background:var(--card-bg); width:85%; padding:40px 20px; border-radius:30px; text-align:center; border:2px solid var(--gold);">
-                    <div style="font-size:12px; color:var(--text-dim); margin-bottom:15px;">${state.pair} | ${state.time}</div>
-                    <div style="font-size:55px; font-weight:900; font-family:'Orbitron'; color:${isUp ? 'var(--green)' : 'var(--red)'}">
-                        ${isUp ? 'UP ▲' : 'DOWN ▼'}
-                    </div>
-                    <div style="margin:20px 0; font-weight:800; color:var(--gold)">WIN RATE: ${acc}%</div>
-                    <button onclick="this.parentElement.parentElement.remove()" style="width:100%; padding:18px; border-radius:15px; background:var(--gold); border:none; font-weight:900;">DONE</button>
+        function switchC(c, el) {
+            document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+            el.classList.add('active');
+            const m = document.getElementById('asset-mount');
+            m.innerHTML = data[c].map(a => `
+                <div class="asset-item" onclick="selectA('${a.n}', this)">
+                    <span style="font-weight:800">${a.n}</span>
+                    <span style="color:var(--green); font-weight:900">${a.p}</span>
                 </div>
-            `;
-            btn.innerText = "GENERATE SIGNAL";
-            btn.disabled = false;
-        }, 2500);
-    }
+            `).join('');
+        }
 
-    // Запуск
-    window.onload = renderMarkets;
-</script>
+        function selectA(n, el) {
+            document.querySelectorAll('.asset-item').forEach(i=>i.classList.remove('selected'));
+            el.classList.add('selected');
+            selP = n;
+            // UPDATE INDICATORS
+            document.getElementById('rsi-v').innerText = (30 + Math.random()*40).toFixed(2);
+            document.getElementById('trend-v').innerText = Math.random()>0.5?"STRONG BUY":"STRONG SELL";
+            document.getElementById('trend-v').style.color = document.getElementById('trend-v').innerText.includes("BUY")?"var(--green)":"var(--red)";
+        }
 
-<style>
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .asset-card.selected { border-color: var(--gold); background: rgba(243, 186, 47, 0.1); }
-</style>
+        function setTF(t, el) {
+            document.querySelectorAll('.tf-btn').forEach(b=>b.classList.remove('active'));
+            el.classList.add('active');
+            selT = t;
+        }
+
+        function analyze() {
+            if(!selP) return alert("ОБЕРИ ПАРУ!");
+            const m = document.getElementById('modal');
+            const cont = document.getElementById('m-content');
+            m.style.display = 'flex';
+            
+            setTimeout(() => {
+                const win = Math.random() > 0.48;
+                const acc = 91 + Math.floor(Math.random()*8);
+                cont.innerHTML = `
+                    <div style="font-size:12px; color:var(--dim); margin-bottom:10px;">${selP} | ${selT}</div>
+                    <div style="font-size:60px; font-weight:900; font-family:'Orbitron'; color:${win?'var(--green)':'var(--red)'}">
+                        ${win?'UP ▲':'DOWN ▼'}
+                    </div>
+                    <div style="margin:20px 0; color:var(--gold); font-weight:900; font-size:20px;">ACCURACY: ${acc}%</div>
+                    <button onclick="document.getElementById('modal').style.display='none'; location.reload();" style="width:100%; padding:20px; border-radius:15px; background:var(--gold); border:none; font-weight:900;">CLOSE & REFRESH</button>
+                `;
+            }, 3000);
+        }
+
+        window.onload = init;
+    </script>
 </body>
 </html>
