@@ -2,305 +2,430 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KOTYOL AI V7</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-    :root {
-        --bg: #05070a;
-        --card: #121418;
-        --accent: #f3ba2f;
-        --green: #00ff88;
-        --red: #ff3b3b;
-        --text: #ffffff;
-        --sub-text: #848e9c;
-    }
-
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-    body, html {
-        background: var(--bg);
-        color: var(--text);
-        font-family: 'Inter', sans-serif;
-        margin: 0; padding: 0;
-        height: 100%; width: 100%;
-        overflow: hidden;
-    }
-
-    .hidden { display: none !important; }
-
-    /* ПРИВІТАННЯ */
-    .fs-overlay {
-        position: fixed; inset: 0; 
-        background: radial-gradient(circle at center, #1a1d23 0%, var(--bg) 100%);
-        z-index: 1000; display: flex; align-items: center; justify-content: center;
-    }
-    .welcome-card { text-align: center; animation: zoomIn 0.5s ease; }
-    .glow-icon { font-size: 60px; margin-bottom: 15px; filter: drop-shadow(0 0 15px var(--accent)); }
-    .mega-btn {
-        background: var(--accent); border: none; padding: 18px 40px;
-        border-radius: 12px; font-weight: 900; font-size: 16px; margin-top: 25px;
-    }
-
-    /* ШАПКА */
-    .top-nav {
-        height: 60px; background: var(--card); display: flex;
-        align-items: center; justify-content: space-between;
-        padding: 0 20px; border-bottom: 1px solid #2b3139;
-    }
-    .logo-text span { color: var(--accent); }
-
-    /* КОНТЕЙНЕР СКРОЛУ */
-    #app { display: flex; flex-direction: column; height: 100vh; }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>KOTYOL ELITE V8</title>
     
-    .main-scroll {
-        flex: 1;
-        overflow-y: auto;
-        padding: 15px;
-        -webkit-overflow-scrolling: touch;
-    }
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 
-    .label { font-size: 11px; color: var(--sub-text); font-weight: 700; margin: 20px 0 10px 5px; text-transform: uppercase; }
+    <style>
+        /* СКРОЛ-ЗОНА */
+.scroll-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; /* Плавність на iOS */
+    padding: 10px 15px;
+    z-index: 10;
+}
 
-    /* КАТЕГОРІЇ */
-    .cat-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
-    .tab {
-        background: #1c2127; padding: 10px 18px; border-radius: 8px;
-        font-size: 12px; font-weight: 700; color: var(--sub-text); white-space: nowrap;
-    }
-    .tab.active { background: var(--accent); color: #000; }
+.inner-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
 
-    /* СПИСОК ПАР */
-    .grid-list { display: grid; gap: 8px; }
-    .asset-item {
-        background: var(--card); border: 1px solid #2b3139;
-        padding: 16px; border-radius: 12px; display: flex;
-        justify-content: space-between; align-items: center;
-        transition: 0.2s;
-    }
-    .asset-item.selected { border-color: var(--accent); background: rgba(243, 186, 47, 0.05); }
+.section-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
-    /* ТАЙМФРЕЙМИ */
-    .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .time-item {
-        background: #1c2127; padding: 15px; border-radius: 10px;
-        text-align: center; font-weight: 800; border: 2px solid transparent;
-    }
-    .time-item.active { border-color: var(--accent); color: var(--accent); }
+.label {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
 
-    /* ТЕХНІЧНИЙ ВІДСТУП ПІД КНОПКУ */
-    .spacer { height: 140px; }
+/* КАТЕГОРІЇ */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
 
-    /* ФІКСОВАНА ПАНЕЛЬ КНОПКИ */
-    .action-bar {
-        position: fixed; bottom: 0; left: 0; width: 100%;
-        padding: 20px; background: linear-gradient(to top, var(--bg) 80%, transparent);
-        z-index: 500;
-    }
-    #main-action-btn {
-        width: 100%; padding: 20px; background: var(--accent);
-        border: none; border-radius: 16px; font-weight: 900;
-        font-size: 18px; color: #000; box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-    }
+.cat-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 12px 5px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-dim);
+}
 
-    /* МОДАЛКА */
-    .modal {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-        z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px;
-    }
-    .modal-content {
-        background: var(--card); width: 100%; max-width: 320px;
-        padding: 40px 20px; border-radius: 24px; text-align: center;
-        border: 2px solid var(--accent);
-    }
-    .loader-circle {
-        width: 40px; height: 40px; border: 4px solid #2b3139;
-        border-top-color: var(--accent); border-radius: 50%;
-        animation: spin 1s infinite linear; margin: 0 auto 15px;
-    }
-    .res-big-text { font-size: 55px; font-weight: 900; margin: 15px 0; }
-    .close-btn { width: 100%; padding: 14px; background: #2b3139; border: none; border-radius: 10px; color: #fff; font-weight: 700; margin-top: 20px; }
+.cat-btn.active {
+    background: var(--gold);
+    color: #000;
+    border-color: var(--gold);
+}
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-</style>
+/* АКТИВИ */
+.assets-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.asset-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: auto; /* Гарантія кліку */
+}
+
+.asset-card.selected {
+    border: 1.5px solid var(--gold);
+    background: rgba(243, 186, 47, 0.05);
+}
+
+.asset-name { font-weight: 700; font-size: 15px; }
+.asset-perc { color: var(--green); font-weight: 900; font-size: 13px; }
+
+/* ТАЙМФРЕЙМИ */
+.time-matrix {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.time-node {
+    background: #1c2127;
+    border: 1px solid var(--border);
+    padding: 15px 5px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 900;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+}
+
+.time-node.active {
+    color: var(--gold);
+    border-color: var(--gold);
+    box-shadow: inset 0 0 10px rgba(243, 186, 47, 0.1);
+}
+
+/* ФУТЕР І КНОПКА */
+.footer-control {
+    flex-shrink: 0;
+    padding: 20px 15px;
+    background: var(--dark-bg);
+    border-top: 1px solid var(--border);
+    z-index: 100;
+}
+
+.action-btn {
+    width: 100%;
+    padding: 20px;
+    border-radius: 16px;
+    border: none;
+    background: linear-gradient(135deg, var(--gold) 0%, #d4a017 100%);
+    color: #000;
+    font-weight: 900;
+    font-size: 18px;
+    font-family: 'Orbitron', sans-serif;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.bottom-spacer {
+    height: 40px; /* Додатковий простір, щоб остання секція виходила вище футера */
+}
+        /* ГЛОБАЛЬНИЙ RESET - щоб нічого не смикалось */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none; /* Забороняємо виділення тексту */
+            -webkit-touch-callout: none;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        :root {
+            --gold: #f3ba2f;
+            --dark-bg: #0b0e11;
+            --card-bg: #1e2329;
+            --border: #2b3139;
+            --green: #00ff88;
+            --red: #ff3b3b;
+            --text-main: #eaecef;
+            --text-dim: #848e9c;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            overflow: hidden; /* Весь екран не скролиться */
+            position: fixed; /* Захист від тягання екрана вниз у ТГ */
+        }
+
+        /* ОСНОВНА ОБОЛОНКА */
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+        }
+
+        /* HEADER - Завжди зверху */
+        .header {
+            height: 60px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .header .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            color: var(--gold);
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        .status-badge {
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--green);
+            border: 1px solid var(--green);
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* ПРИВІТАННЯ (OVERLAY) */
+        #welcome-layer {
+            position: fixed;
+            inset: 0;
+            background: var(--dark-bg);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .welcome-logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px var(--gold));
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        .enter-btn {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            width: 100%;
+            max-width: 280px;
+            padding: 20px;
+            border-radius: 15px;
+            font-weight: 900;
+            font-size: 18px;
+            text-transform: uppercase;
+            margin-top: 30px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(243, 186, 47, 0.3);
+        }
+
+        .hidden { display: none !important; }
+    </style>
 </head>
+    <div class="scroll-container">
+    <div class="inner-content">
+        <div class="section-box">
+            <h2 class="label">ОБЕРІТЬ РИНОК</h2>
+            <div class="category-grid">
+                <div class="cat-btn active" onclick="changeMarket('otc', this)">OTC ПАРИ</div>
+                <div class="cat-btn" onclick="changeMarket('crypto', this)">КРИПТО</div>
+                <div class="cat-btn" onclick="changeMarket('stocks', this)">АКЦІЇ</div>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <h2 class="label">ВИБЕРІТЬ АКТИВ</h2>
+            <div id="assets-mount" class="assets-list">
+                </div>
+        </div>
+
+        <div class="section-box">
+            <h2 class="label">ТАЙМФРЕЙМ (ЧАС)</h2>
+            <div class="time-matrix">
+                <div class="time-node active" onclick="pickTime('1M', this)">1 MIN</div>
+                <div class="time-node" onclick="pickTime('2M', this)">2 MIN</div>
+                <div class="time-node" onclick="pickTime('3M', this)">3 MIN</div>
+                <div class="time-node" onclick="pickTime('5M', this)">5 MIN</div>
+                <div class="time-node" onclick="pickTime('15M', this)">15 MIN</div>
+                <div class="time-node" onclick="pickTime('30M', this)">30 MIN</div>
+            </div>
+        </div>
+
+        <div class="bottom-spacer"></div>
+    </div>
+</div>
+
+<div class="footer-control">
+    <button id="trigger-signal" class="action-btn" onclick="generateSignal()">
+        ЗАПУСТИТИ АНАЛІЗ
+    </button>
+</div>
 <body>
 
-    <div id="welcome-screen" class="fs-overlay">
-        <div class="welcome-card">
-            <div class="glow-icon">💎</div>
-            <h1>KOTYOL <span>AI</span></h1>
-            <p>POCKET OPTION TERMINAL</p>
-            <button class="mega-btn" onclick="initApp()">УВІЙТИ В ТЕРМІНАЛ</button>
-        </div>
+    <div id="welcome-layer">
+        <div class="welcome-logo">🏆</div>
+        <h1 style="font-family:'Orbitron'; font-size:32px;">KOTYOL <span style="color:var(--gold)">V8</span></h1>
+        <p style="color:var(--text-dim); margin-top:10px;">ULTIMATE POCKET OPTION SIGNALS</p>
+        <button class="enter-btn" onclick="launchTerminal()">LAUNCH TERMINAL</button>
     </div>
 
-    <div id="app" class="hidden">
-        <div class="top-nav">
-            <div class="logo-text">KOTYOL <span>PRO</span></div>
-            <div id="signal-count">AI ONLINE</div>
+    <div class="wrapper hidden" id="terminal-ui">
+        <header class="header">
+            <div class="logo">KOTYOL <span>PRO</span></div>
+            <div class="status-badge">AI Engine v8.4.2</div>
+        </header>
+
         </div>
 
-        <div class="main-scroll">
-            
-            <section>
-                <div class="label">ОБЕРІТЬ КАТЕГОРІЮ</div>
-                <div class="cat-tabs">
-                    <div class="tab active" onclick="loadAssets('otc', this)">OTC ПАРИ</div>
-                    <div class="tab" onclick="loadAssets('crypto', this)">КРИПТА</div>
-                    <div class="tab" onclick="loadAssets('stocks', this)">АКЦІЇ</div>
-                </div>
-            </section>
-
-            <section>
-                <div class="label">ОБЕРІТЬ ВАЛЮТНУ ПАРУ</div>
-                <div id="asset-list" class="grid-list">
-                    </div>
-            </section>
-
-            <section>
-                <div class="label">ЧАС ЕКСПІРАЦІЇ (TIME)</div>
-                <div class="time-grid">
-                    <div class="time-item active" onclick="selectTime('1M', this)">1 MIN</div>
-                    <div class="time-item" onclick="selectTime('2M', this)">2 MIN</div>
-                    <div class="time-item" onclick="selectTime('3M', this)">3 MIN</div>
-                    <div class="time-item" onclick="selectTime('5M', this)">5 MIN</div>
-                    <div class="time-item" onclick="selectTime('15M', this)">15 MIN</div>
-                    <div class="time-item" onclick="selectTime('30M', this)">30 MIN</div>
-                </div>
-            </section>
-
-            <div class="spacer"></div>
-        </div>
-
-        <div class="action-bar">
-            <button id="main-action-btn" onclick="runAnalysis()">АНАЛІЗУВАТИ</button>
-        </div>
-    </div>
-
-    <div id="analysis-modal" class="modal hidden">
-        <div class="modal-content">
-            <div id="pre-loader">
-                <div class="loader-circle"></div>
-                <p>ОБРОБКА ДАНИХ...</p>
-            </div>
-            <div id="final-result" class="hidden">
-                <div class="res-header" id="res-pair-name">---</div>
-                <div id="res-direction" class="res-big-text">---</div>
-                <div class="res-info">
-                    <span>Впевненість: <b id="res-perc" style="color:#00ff88">0%</b></span>
-                </div>
-                <button class="close-btn" onclick="closeModal()">ЗАКРИТИ</button>
-            </div>
-        </div>
-    </div>
-<script>
-    // 1. ДАНІ ДЛЯ POCKET OPTION
-    const database = {
+    <script>
+        function launchTerminal() {
+            document.getElementById('welcome-layer').classList.add('hidden');
+            document.getElementById('terminal-ui').classList.remove('hidden');
+            // Тут буде ініціалізація додатку
+        }
+    </script>
+    <script>
+    // 1. БАЗА ДАНИХ АКТИВІВ
+    const marketData = {
         otc: [
-            {pair: "EUR/USD OTC", payout: "92%"}, {pair: "GBP/USD OTC", payout: "91%"},
-            {pair: "USD/JPY OTC", payout: "92%"}, {pair: "AUD/CAD OTC", payout: "89%"},
-            {pair: "NZD/USD OTC", payout: "92%"}, {pair: "EUR/GBP OTC", payout: "90%"}
+            {n: "EUR/USD OTC", p: "92%"}, {n: "GBP/USD OTC", p: "91%"},
+            {n: "USD/JPY OTC", p: "92%"}, {n: "AUD/CAD OTC", p: "89%"},
+            {n: "EUR/GBP OTC", p: "90%"}, {n: "USD/CHF OTC", p: "88%"}
         ],
         crypto: [
-            {pair: "BTC/USDT", payout: "91%"}, {pair: "ETH/USDT", payout: "88%"},
-            {pair: "SOL/USDT", payout: "94%"}, {pair: "DOGE/USDT", payout: "85%"}
+            {n: "BTC/USDT", p: "91%"}, {n: "ETH/USDT", p: "89%"},
+            {n: "SOL/USDT", p: "94%"}, {n: "DOGE/USDT", p: "85%"}
         ],
         stocks: [
-            {pair: "Apple OTC", payout: "92%"}, {pair: "Tesla OTC", payout: "91%"},
-            {pair: "Amazon OTC", payout: "90%"}, {pair: "Boeing OTC", payout: "88%"}
+            {n: "Apple OTC", p: "92%"}, {n: "Tesla OTC", p: "91%"},
+            {n: "Amazon OTC", p: "90%"}, {n: "Boeing OTC", p: "88%"}
         ]
     };
 
     let selectedPair = "";
-    let selectedTime = "1 MIN";
+    let selectedTime = "1M";
 
-    // 2. ІНІЦІАЛІЗАЦІЯ
-    function initApp() {
-        document.getElementById('welcome-screen').classList.add('hidden');
-        document.getElementById('app').classList.remove('hidden');
-        loadAssets('otc', document.querySelector('.tab')); // Стартуємо з OTC
+    // 2. ЗАПУСК ТЕРМІНАЛУ
+    function launchTerminal() {
+        document.getElementById('welcome-layer').style.display = 'none';
+        const ui = document.getElementById('terminal-ui');
+        ui.classList.remove('hidden');
+        ui.style.display = 'flex';
+        
+        // Завантажуємо першу категорію
+        renderAssets('otc');
     }
 
-    // 3. ЗАВАНТАЖЕННЯ ПАР (ВИПРАВЛЕНО)
-    function loadAssets(category, element) {
-        // Оновлюємо таби
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        element.classList.add('active');
+    // 3. ПЕРЕМИКАННЯ РИНКІV
+    function changeMarket(type, el) {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        renderAssets(type);
+    }
 
-        const listContainer = document.getElementById('asset-list');
-        listContainer.innerHTML = ""; // Очищуємо
-
-        database[category].forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'asset-item';
-            // Якщо ця пара вже була вибрана, підсвічуємо її
-            if (selectedPair === item.pair) div.classList.add('selected');
-
-            div.onclick = function() {
-                document.querySelectorAll('.asset-item').forEach(i => i.classList.remove('selected'));
-                div.classList.add('selected');
-                selectedPair = item.pair;
-                console.log("Вибрано пару:", selectedPair);
+    // 4. ВІДМАЛЬОВКА СПИСКУ (ФІКС КЛІКІВ)
+    function renderAssets(type) {
+        const container = document.getElementById('assets-mount');
+        container.innerHTML = "";
+        
+        marketData[type].forEach(item => {
+            const card = document.createElement('div');
+            card.className = `asset-card ${selectedPair === item.n ? 'selected' : ''}`;
+            
+            // Пряма обробка кліку
+            card.onclick = function() {
+                document.querySelectorAll('.asset-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedPair = item.n;
+                console.log("Active Pair:", selectedPair);
             };
 
-            div.innerHTML = `
-                <span style="font-weight:700">${item.pair}</span>
-                <span style="color:var(--green); font-weight:900">${item.payout}</span>
+            card.innerHTML = `
+                <span class="asset-name">${item.n}</span>
+                <span class="asset-perc">${item.p}</span>
             `;
-            listContainer.appendChild(div);
+            container.appendChild(card);
         });
     }
 
-    // 4. ВИБІР ТАЙМФРЕЙМУ
-    function selectTime(time, element) {
-        document.querySelectorAll('.time-item').forEach(t => t.classList.remove('active'));
-        element.classList.add('active');
-        selectedTime = time;
-        console.log("Вибрано час:", selectedTime);
+    // 5. ВИБІР ЧАСУ
+    function pickTime(t, el) {
+        document.querySelectorAll('.time-node').forEach(n => n.classList.remove('active'));
+        el.classList.add('active');
+        selectedTime = t;
     }
 
-    // 5. АНАЛІЗ (ФІКС ЛАГІВ)
-    function runAnalysis() {
+    // 6. ГЕНЕРАЦІЯ СИГНАЛУ (БЕЗ ЛАГІВ)
+    function generateSignal() {
         if (!selectedPair) {
-            alert("СПОЧАТКУ ВИБЕРИ ПАРУ!");
+            alert("СПОЧАТКУ ОБЕРИ ПАРУ (CLICK ON ASSET)!");
             return;
         }
 
-        const modal = document.getElementById('analysis-modal');
-        const loader = document.getElementById('pre-loader');
-        const result = document.getElementById('final-result');
+        // Створюємо тимчасове вікно результату (Modal)
+        const modal = document.createElement('div');
+        modal.style = "position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:2000; display:flex; align-items:center; justify-content:center; padding:20px;";
+        
+        const isUp = Math.random() > 0.49;
+        const acc = 88 + Math.floor(Math.random() * 9);
+        
+        modal.innerHTML = `
+            <div style="background:#1e2329; width:100%; max-width:320px; padding:40px 20px; border-radius:25px; text-align:center; border:2px solid var(--gold); font-family:'Roboto', sans-serif;">
+                <div id="loader-txt" style="font-family:'Orbitron'; font-weight:700; color:var(--gold);">АНАЛІЗ РИНКУ...</div>
+                <div id="result-content" style="display:none">
+                    <div style="color:#848e9c; font-size:14px; margin-bottom:10px;">${selectedPair} | ${selectedTime}</div>
+                    <div style="font-size:50px; font-weight:900; color:${isUp ? '#00ff88' : '#ff3b3b'}; font-family:'Orbitron';">
+                        ${isUp ? 'CALL 🟢' : 'PUT 🔴'}
+                    </div>
+                    <div style="margin: 20px 0; color:#00ff88; font-weight:700;">ACCURACY: ${acc}%</div>
+                    <button id="close-res" style="width:100%; padding:15px; background:#2b3139; color:#fff; border:none; border-radius:12px; font-weight:700;">CLOSE</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
 
-        modal.classList.remove('hidden');
-        loader.classList.remove('hidden');
-        result.classList.add('hidden');
-
-        // Імітація роботи нейромережі
+        // Імітація процесу
         setTimeout(() => {
-            loader.classList.add('hidden');
-            result.classList.remove('hidden');
-
-            const isUp = Math.random() > 0.48;
-            const accuracy = 87 + Math.floor(Math.random() * 11);
-
-            document.getElementById('res-pair-name').innerText = selectedPair + " (" + selectedTime + ")";
-            const dirLabel = document.getElementById('res-direction');
+            document.getElementById('loader-txt').style.display = 'none';
+            document.getElementById('result-content').style.display = 'block';
             
-            if (isUp) {
-                dirLabel.innerText = "CALL 🟢";
-                dirLabel.style.color = "var(--green)";
-            } else {
-                dirLabel.innerText = "PUT 🔴";
-                dirLabel.style.color = "var(--red)";
-            }
-
-            document.getElementById('res-perc').innerText = accuracy + "%";
-        }, 2200);
-    }
-
-    function closeModal() {
-        document.getElementById('analysis-modal').classList.add('hidden');
+            document.getElementById('close-res').onclick = () => {
+                modal.remove();
+            };
+        }, 1800);
     }
 </script>
 </body>
