@@ -3,430 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>KOTYOL ELITE V8</title>
+    <title>KOTYOL ELITE V9 - TURBO</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
     <style>
-        /* СКРОЛ-ЗОНА */
-.scroll-container {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch; /* Плавність на iOS */
-    padding: 10px 15px;
-    z-index: 10;
-}
-
-.inner-content {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.section-box {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.label {
-    font-size: 11px;
-    color: var(--text-dim);
-    letter-spacing: 1.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
-/* КАТЕГОРІЇ */
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-}
-
-.cat-btn {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    padding: 12px 5px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 700;
-    text-align: center;
-    color: var(--text-dim);
-}
-
-.cat-btn.active {
-    background: var(--gold);
-    color: #000;
-    border-color: var(--gold);
-}
-
-/* АКТИВИ */
-.assets-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.asset-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    padding: 16px;
-    border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    pointer-events: auto; /* Гарантія кліку */
-}
-
-.asset-card.selected {
-    border: 1.5px solid var(--gold);
-    background: rgba(243, 186, 47, 0.05);
-}
-
-.asset-name { font-weight: 700; font-size: 15px; }
-.asset-perc { color: var(--green); font-weight: 900; font-size: 13px; }
-
-/* ТАЙМФРЕЙМИ */
-.time-matrix {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-}
-
-.time-node {
-    background: #1c2127;
-    border: 1px solid var(--border);
-    padding: 15px 5px;
-    border-radius: 10px;
-    text-align: center;
-    font-weight: 900;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 13px;
-}
-
-.time-node.active {
-    color: var(--gold);
-    border-color: var(--gold);
-    box-shadow: inset 0 0 10px rgba(243, 186, 47, 0.1);
-}
-
-/* ФУТЕР І КНОПКА */
-.footer-control {
-    flex-shrink: 0;
-    padding: 20px 15px;
-    background: var(--dark-bg);
-    border-top: 1px solid var(--border);
-    z-index: 100;
-}
-
-.action-btn {
-    width: 100%;
-    padding: 20px;
-    border-radius: 16px;
-    border: none;
-    background: linear-gradient(135deg, var(--gold) 0%, #d4a017 100%);
-    color: #000;
-    font-weight: 900;
-    font-size: 18px;
-    font-family: 'Orbitron', sans-serif;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-}
-
-.bottom-spacer {
-    height: 40px; /* Додатковий простір, щоб остання секція виходила вище футера */
-}
-        /* ГЛОБАЛЬНИЙ RESET - щоб нічого не смикалось */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-user-select: none; /* Забороняємо виділення тексту */
-            -webkit-touch-callout: none;
-            font-family: 'Roboto', sans-serif;
-        }
-
         :root {
             --gold: #f3ba2f;
-            --dark-bg: #0b0e11;
-            --card-bg: #1e2329;
+            --dark-bg: #080a0c;
+            --card-bg: #161a1e;
             --border: #2b3139;
             --green: #00ff88;
             --red: #ff3b3b;
-            --text-main: #eaecef;
-            --text-dim: #848e9c;
+            --blue: #3498db;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
         }
 
-        html, body {
-            height: 100%;
-            width: 100%;
-            background-color: var(--dark-bg);
-            color: var(--text-main);
-            overflow: hidden; /* Весь екран не скролиться */
-            position: fixed; /* Захист від тягання екрана вниз у ТГ */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; font-family: 'Inter', sans-serif; }
+
+        body, html { 
+            height: 100%; width: 100%; background: var(--dark-bg); 
+            color: var(--text-main); overflow: hidden; position: fixed; 
         }
 
-        /* ОСНОВНА ОБОЛОНКА */
-        .wrapper {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            width: 100%;
-            position: relative;
-        }
+        .wrapper { display: flex; flex-direction: column; height: 100vh; width: 100%; }
 
-        /* HEADER - Завжди зверху */
+        /* ПЛЕЄР В ШАПЦІ */
         .header {
-            height: 60px;
-            background: var(--card-bg);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 15px;
-            flex-shrink: 0;
-            z-index: 100;
+            height: 70px; background: var(--card-bg); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 15px; flex-shrink: 0; z-index: 100;
         }
 
-        .header .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            color: var(--gold);
-            font-size: 18px;
-            letter-spacing: 1px;
+        .music-mini-player {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.05); padding: 5px 12px;
+            border-radius: 20px; border: 1px solid var(--border);
         }
 
-        .status-badge {
-            font-size: 10px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--green);
-            border: 1px solid var(--green);
-            text-transform: uppercase;
-            font-weight: bold;
+        .track-info { font-size: 10px; max-width: 80px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--gold); }
+
+        /* СКРОЛ-КОНТЕЙНЕР */
+        .main-content {
+            flex: 1; overflow-y: auto; padding-bottom: 160px;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* ПРИВІТАННЯ (OVERLAY) */
-        #welcome-layer {
-            position: fixed;
-            inset: 0;
-            background: var(--dark-bg);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
+        /* КАРТКА СТАТИСТИКИ (NEW) */
+        .stats-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px;
+        }
+        .stat-card {
+            background: var(--card-bg); padding: 15px; border-radius: 12px;
+            border-left: 3px solid var(--gold);
+        }
+        .stat-val { font-family: 'Orbitron'; font-size: 18px; color: var(--green); }
+        .stat-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; }
+
+        /* СЕКЦІЇ */
+        .section-header { 
+            padding: 20px 15px 10px; font-size: 11px; font-weight: 800; 
+            color: var(--gold); letter-spacing: 2px; text-transform: uppercase;
         }
 
-        .welcome-logo {
-            font-size: 80px;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 20px var(--gold));
-            animation: pulse 2s infinite;
+        /* ТАЙМФРЕЙМИ (TURBO) */
+        .time-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 15px;
         }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
+        .time-btn {
+            background: #1c2127; border: 1px solid var(--border);
+            padding: 12px 2px; border-radius: 8px; text-align: center;
+            font-size: 10px; font-weight: 700;
         }
+        .time-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(243, 186, 47, 0.1); }
+        .turbo { color: #ff9f43; border-color: rgba(255, 159, 67, 0.3); }
 
-        .enter-btn {
-            background: var(--gold);
-            color: #000;
-            border: none;
-            width: 100%;
-            max-width: 280px;
-            padding: 20px;
-            border-radius: 15px;
-            font-weight: 900;
-            font-size: 18px;
-            text-transform: uppercase;
-            margin-top: 30px;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(243, 186, 47, 0.3);
+        /* ІНДИКАТОРИ (NEW) */
+        .indicators-box {
+            margin: 0 15px; background: #0f1216; border: 1px solid var(--border);
+            border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px;
+        }
+        .ind-item { display: flex; justify-content: space-between; font-size: 12px; }
+        .ind-val { font-weight: 800; font-family: 'Orbitron'; }
+
+        /* ФУТЕР */
+        .footer {
+            position: fixed; bottom: 0; width: 100%; padding: 20px 15px;
+            background: linear-gradient(transparent, var(--dark-bg) 40%); z-index: 500;
+        }
+        .main-btn {
+            width: 100%; padding: 22px; border-radius: 18px; border: none;
+            background: var(--gold); color: #000; font-family: 'Orbitron';
+            font-weight: 900; font-size: 18px; box-shadow: 0 8px 30px rgba(243,186,47,0.4);
         }
 
         .hidden { display: none !important; }
     </style>
 </head>
-    <div class="scroll-container">
-    <div class="inner-content">
-        <div class="section-box">
-            <h2 class="label">ОБЕРІТЬ РИНОК</h2>
-            <div class="category-grid">
-                <div class="cat-btn active" onclick="changeMarket('otc', this)">OTC ПАРИ</div>
-                <div class="cat-btn" onclick="changeMarket('crypto', this)">КРИПТО</div>
-                <div class="cat-btn" onclick="changeMarket('stocks', this)">АКЦІЇ</div>
-            </div>
-        </div>
-
-        <div class="section-box">
-            <h2 class="label">ВИБЕРІТЬ АКТИВ</h2>
-            <div id="assets-mount" class="assets-list">
-                </div>
-        </div>
-
-        <div class="section-box">
-            <h2 class="label">ТАЙМФРЕЙМ (ЧАС)</h2>
-            <div class="time-matrix">
-                <div class="time-node active" onclick="pickTime('1M', this)">1 MIN</div>
-                <div class="time-node" onclick="pickTime('2M', this)">2 MIN</div>
-                <div class="time-node" onclick="pickTime('3M', this)">3 MIN</div>
-                <div class="time-node" onclick="pickTime('5M', this)">5 MIN</div>
-                <div class="time-node" onclick="pickTime('15M', this)">15 MIN</div>
-                <div class="time-node" onclick="pickTime('30M', this)">30 MIN</div>
-            </div>
-        </div>
-
-        <div class="bottom-spacer"></div>
-    </div>
-</div>
-
-<div class="footer-control">
-    <button id="trigger-signal" class="action-btn" onclick="generateSignal()">
-        ЗАПУСТИТИ АНАЛІЗ
-    </button>
-</div>
 <body>
 
-    <div id="welcome-layer">
-        <div class="welcome-logo">🏆</div>
-        <h1 style="font-family:'Orbitron'; font-size:32px;">KOTYOL <span style="color:var(--gold)">V8</span></h1>
-        <p style="color:var(--text-dim); margin-top:10px;">ULTIMATE POCKET OPTION SIGNALS</p>
-        <button class="enter-btn" onclick="launchTerminal()">LAUNCH TERMINAL</button>
-    </div>
-
-    <div class="wrapper hidden" id="terminal-ui">
+    <div class="wrapper" id="main-app">
         <header class="header">
-            <div class="logo">KOTYOL <span>PRO</span></div>
-            <div class="status-badge">AI Engine v8.4.2</div>
+            <div class="logo" style="font-family:'Orbitron'; font-weight:900; font-size:16px;">
+                KOTYOL <span style="color:var(--gold)">V9</span>
+            </div>
+            
+            <div class="music-mini-player">
+                <div class="track-info" id="current-track">Spotify Top 100...</div>
+                <button onclick="toggleMusic()" id="play-pause-btn" style="background:none; border:none; color:var(--gold); font-size:16px;">▶️</button>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" style="width:40px; accent-color:var(--gold);">
+            </div>
         </header>
 
-        </div>
+        <main class="main-content">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-label">Daily Profit</div>
+                    <div class="stat-val">+$1,420</div>
+                </div>
+                <div class="stat-card" style="border-left-color: var(--blue);">
+                    <div class="stat-label">Win Rate</div>
+                    <div class="stat-val" style="color:var(--blue)">94.2%</div>
+                </div>
+            </div>
 
-    <script>
-        function launchTerminal() {
-            document.getElementById('welcome-layer').classList.add('hidden');
-            document.getElementById('terminal-ui').classList.remove('hidden');
-            // Тут буде ініціалізація додатку
-        }
-    </script>
-    <script>
-    // 1. БАЗА ДАНИХ АКТИВІВ
-    const marketData = {
-        otc: [
-            {n: "EUR/USD OTC", p: "92%"}, {n: "GBP/USD OTC", p: "91%"},
-            {n: "USD/JPY OTC", p: "92%"}, {n: "AUD/CAD OTC", p: "89%"},
-            {n: "EUR/GBP OTC", p: "90%"}, {n: "USD/CHF OTC", p: "88%"}
-        ],
-        crypto: [
-            {n: "BTC/USDT", p: "91%"}, {n: "ETH/USDT", p: "89%"},
-            {n: "SOL/USDT", p: "94%"}, {n: "DOGE/USDT", p: "85%"}
-        ],
-        stocks: [
-            {n: "Apple OTC", p: "92%"}, {n: "Tesla OTC", p: "91%"},
-            {n: "Amazon OTC", p: "90%"}, {n: "Boeing OTC", p: "88%"}
+            <div class="section-header">Market Selection</div>
+            <div id="cat-mount" style="display:flex; gap:10px; padding:0 15px; overflow-x:auto;">
+                </div>
+
+            <div class="section-header">Active Assets</div>
+            <div id="assets-mount" style="padding:0 15px; display:flex; flex-direction:column; gap:8px;">
+                </div>
+
+            <div class="section-header">Turbo Timeframes</div>
+            <div class="time-grid">
+                <div class="time-btn turbo" onclick="setTime('5s', this)">5 SEC</div>
+                <div class="time-btn turbo" onclick="setTime('15s', this)">15 SEC</div>
+                <div class="time-btn active" onclick="setTime('1M', this)">1 MIN</div>
+                <div class="time-btn" onclick="setTime('5M', this)">5 MIN</div>
+            </div>
+
+            <div class="section-header">Technical Analysis</div>
+            <div class="indicators-box">
+                <div class="ind-item">
+                    <span>RSI (14):</span>
+                    <span class="ind-val" id="ind-rsi" style="color:var(--green)">OVERBOUGHT</span>
+                </div>
+                <div class="ind-item">
+                    <span>MA (200):</span>
+                    <span class="ind-val" id="ind-ma" style="color:var(--red)">BEARISH</span>
+                </div>
+                <div class="ind-item">
+                    <span>Volatility:</span>
+                    <span class="ind-val" id="ind-vol" style="color:var(--gold)">HIGH</span>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <button class="main-btn" onclick="startAnalysis()">GENERATE SIGNAL</button>
+        </footer>
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+<script>
+    // 1. КОНФІГУРАЦІЯ АКТИВІВ ТА ПЛЕЙЛИСТА
+    const config = {
+        assets: {
+            otc: [
+                {n: "EUR/USD OTC", p: "92%"}, {n: "GBP/USD OTC", p: "91%"},
+                {n: "USD/JPY OTC", p: "92%"}, {n: "AUD/CAD OTC", p: "89%"}
+            ],
+            crypto: [
+                {n: "BTC/USDT", p: "94%"}, {n: "ETH/USDT", p: "91%"},
+                {n: "SOL/USDT", p: "95%"}, {n: "DOGE/USDT", p: "88%"}
+            ]
+        },
+        playlist: [
+            {n: "Spotify Top #1 - Blinding Lights", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
+            {n: "Spotify Top #2 - Starboy", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
+            {n: "Spotify Top #3 - Heat Waves", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"}
         ]
     };
 
-    let selectedPair = "";
-    let selectedTime = "1M";
+    let state = {
+        pair: "",
+        time: "1M",
+        isPlaying: false,
+        trackIndex: 0
+    };
 
-    // 2. ЗАПУСК ТЕРМІНАЛУ
-    function launchTerminal() {
-        document.getElementById('welcome-layer').style.display = 'none';
-        const ui = document.getElementById('terminal-ui');
-        ui.classList.remove('hidden');
-        ui.style.display = 'flex';
-        
-        // Завантажуємо першу категорію
-        renderAssets('otc');
+    // 2. МУЗИЧНИЙ ПЛЕЄР (SPOTIFY STYLE)
+    const audio = document.getElementById('bg-music');
+    const playBtn = document.getElementById('play-pause-btn');
+    const trackLabel = document.getElementById('current-track');
+    const volSlider = document.getElementById('volume-slider');
+
+    function toggleMusic() {
+        if (state.isPlaying) {
+            audio.pause();
+            playBtn.innerText = "▶️";
+        } else {
+            audio.play().catch(e => console.log("User interaction needed"));
+            playBtn.innerText = "⏸️";
+        }
+        state.isPlaying = !state.isPlaying;
     }
 
-    // 3. ПЕРЕМИКАННЯ РИНКІV
-    function changeMarket(type, el) {
+    volSlider.oninput = (e) => { audio.volume = e.target.value; };
+
+    // Авто-перемикання треків
+    audio.onended = () => {
+        state.trackIndex = (state.trackIndex + 1) % config.playlist.length;
+        audio.src = config.playlist[state.trackIndex].src;
+        trackLabel.innerText = config.playlist[state.trackIndex].n;
+        audio.play();
+    };
+
+    // 3. РОБОТА З РИНКАМИ ТА ІНДИКАТОРАМИ
+    function renderMarkets() {
+        const mount = document.getElementById('cat-mount');
+        mount.innerHTML = Object.keys(config.assets).map(cat => `
+            <div class="cat-btn ${cat === 'otc' ? 'active' : ''}" onclick="switchCat('${cat}', this)">
+                ${cat.toUpperCase()}
+            </div>
+        `).join('');
+        switchCat('otc', mount.firstChild);
+    }
+
+    function switchCat(cat, el) {
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
-        renderAssets(type);
-    }
-
-    // 4. ВІДМАЛЬОВКА СПИСКУ (ФІКС КЛІКІВ)
-    function renderAssets(type) {
-        const container = document.getElementById('assets-mount');
-        container.innerHTML = "";
         
-        marketData[type].forEach(item => {
-            const card = document.createElement('div');
-            card.className = `asset-card ${selectedPair === item.n ? 'selected' : ''}`;
-            
-            // Пряма обробка кліку
-            card.onclick = function() {
-                document.querySelectorAll('.asset-card').forEach(c => c.classList.remove('selected'));
-                card.classList.add('selected');
-                selectedPair = item.n;
-                console.log("Active Pair:", selectedPair);
-            };
-
-            card.innerHTML = `
+        const assetsMount = document.getElementById('assets-mount');
+        assetsMount.innerHTML = config.assets[cat].map(item => `
+            <div class="asset-card" onclick="selectPair('${item.n}', this)">
                 <span class="asset-name">${item.n}</span>
                 <span class="asset-perc">${item.p}</span>
-            `;
-            container.appendChild(card);
-        });
-    }
-
-    // 5. ВИБІР ЧАСУ
-    function pickTime(t, el) {
-        document.querySelectorAll('.time-node').forEach(n => n.classList.remove('active'));
-        el.classList.add('active');
-        selectedTime = t;
-    }
-
-    // 6. ГЕНЕРАЦІЯ СИГНАЛУ (БЕЗ ЛАГІВ)
-    function generateSignal() {
-        if (!selectedPair) {
-            alert("СПОЧАТКУ ОБЕРИ ПАРУ (CLICK ON ASSET)!");
-            return;
-        }
-
-        // Створюємо тимчасове вікно результату (Modal)
-        const modal = document.createElement('div');
-        modal.style = "position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:2000; display:flex; align-items:center; justify-content:center; padding:20px;";
-        
-        const isUp = Math.random() > 0.49;
-        const acc = 88 + Math.floor(Math.random() * 9);
-        
-        modal.innerHTML = `
-            <div style="background:#1e2329; width:100%; max-width:320px; padding:40px 20px; border-radius:25px; text-align:center; border:2px solid var(--gold); font-family:'Roboto', sans-serif;">
-                <div id="loader-txt" style="font-family:'Orbitron'; font-weight:700; color:var(--gold);">АНАЛІЗ РИНКУ...</div>
-                <div id="result-content" style="display:none">
-                    <div style="color:#848e9c; font-size:14px; margin-bottom:10px;">${selectedPair} | ${selectedTime}</div>
-                    <div style="font-size:50px; font-weight:900; color:${isUp ? '#00ff88' : '#ff3b3b'}; font-family:'Orbitron';">
-                        ${isUp ? 'CALL 🟢' : 'PUT 🔴'}
-                    </div>
-                    <div style="margin: 20px 0; color:#00ff88; font-weight:700;">ACCURACY: ${acc}%</div>
-                    <button id="close-res" style="width:100%; padding:15px; background:#2b3139; color:#fff; border:none; border-radius:12px; font-weight:700;">CLOSE</button>
-                </div>
             </div>
-        `;
-        
-        document.body.appendChild(modal);
-
-        // Імітація процесу
-        setTimeout(() => {
-            document.getElementById('loader-txt').style.display = 'none';
-            document.getElementById('result-content').style.display = 'block';
-            
-            document.getElementById('close-res').onclick = () => {
-                modal.remove();
-            };
-        }, 1800);
+        `).join('');
     }
+
+    function selectPair(name, el) {
+        document.querySelectorAll('.asset-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        state.pair = name;
+        updateIndicators(); // Оновлюємо RSI/MA під пару
+    }
+
+    function setTime(t, el) {
+        document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        state.time = t;
+    }
+
+    // 4. ДИНАМІЧНІ ІНДИКАТОРИ (Рандомна логіка під виглядом AI)
+    function updateIndicators() {
+        const rsi = document.getElementById('ind-rsi');
+        const ma = document.getElementById('ind-ma');
+        
+        const rsiVal = Math.floor(Math.random() * 100);
+        if(rsiVal > 70) { rsi.innerText = "OVERBOUGHT"; rsi.style.color = "var(--red)"; }
+        else if(rsiVal < 30) { rsi.innerText = "OVERSOLD"; rsi.style.color = "var(--green)"; }
+        else { rsi.innerText = "NEUTRAL"; rsi.style.color = "var(--gold)"; }
+
+        ma.innerText = Math.random() > 0.5 ? "BULLISH TREND" : "BEARISH TREND";
+        ma.style.color = ma.innerText.includes("BULLISH") ? "var(--green)" : "var(--red)";
+    }
+
+    // 5. ГЕНЕРАЦІЯ СИГНАЛУ
+    function startAnalysis() {
+        if (!state.pair) return alert("ОБЕРИ ВАЛЮТНУ ПАРУ!");
+
+        const btn = document.querySelector('.main-btn');
+        btn.innerText = "SCANNING...";
+        btn.disabled = true;
+
+        // Створюємо оверлей сигналу
+        const overlay = document.createElement('div');
+        overlay.style = "position:fixed; inset:0; background:rgba(0,0,0,0.98); z-index:2000; display:flex; align-items:center; justify-content:center;";
+        overlay.innerHTML = `<div style="text-align:center;">
+            <div class="loader-circle" style="width:60px; height:60px; border:4px solid #2b3139; border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; margin:0 auto 20px;"></div>
+            <p style="font-family:'Orbitron';">AI CALCULATION...</p>
+        </div>`;
+        document.body.appendChild(overlay);
+
+        setTimeout(() => {
+            const isUp = Math.random() > 0.47;
+            const acc = 89 + Math.floor(Math.random() * 8);
+            
+            overlay.innerHTML = `
+                <div style="background:var(--card-bg); width:85%; padding:40px 20px; border-radius:30px; text-align:center; border:2px solid var(--gold);">
+                    <div style="font-size:12px; color:var(--text-dim); margin-bottom:15px;">${state.pair} | ${state.time}</div>
+                    <div style="font-size:55px; font-weight:900; font-family:'Orbitron'; color:${isUp ? 'var(--green)' : 'var(--red)'}">
+                        ${isUp ? 'UP ▲' : 'DOWN ▼'}
+                    </div>
+                    <div style="margin:20px 0; font-weight:800; color:var(--gold)">WIN RATE: ${acc}%</div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="width:100%; padding:18px; border-radius:15px; background:var(--gold); border:none; font-weight:900;">DONE</button>
+                </div>
+            `;
+            btn.innerText = "GENERATE SIGNAL";
+            btn.disabled = false;
+        }, 2500);
+    }
+
+    // Запуск
+    window.onload = renderMarkets;
 </script>
+
+<style>
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .asset-card.selected { border-color: var(--gold); background: rgba(243, 186, 47, 0.1); }
+</style>
 </body>
 </html>
