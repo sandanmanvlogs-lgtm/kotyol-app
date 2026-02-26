@@ -3,404 +3,328 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>KOTYOL MASTERPIECE V20</title>
+    <title>KOTYOL ULTIMATE V21</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --gold: #f3ba2f;
-            --gold-dark: #b38a1f;
-            --bg: #040508;
-            --card: #0d1117;
-            --card-brighter: #161b22;
-            --border: rgba(255, 255, 255, 0.05);
-            --green: #00ffa3;
-            --red: #ff3e3e;
+            --bg: #06070a;
+            --card: #11141b;
+            --border: rgba(255, 255, 255, 0.06);
+            --green: #00ff88;
+            --red: #ff3b3b;
             --font-mono: 'Orbitron', sans-serif;
-            --font-code: 'JetBrains Mono', monospace;
         }
 
-        /* Обнулення та база */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body, html {
             height: 100%; width: 100%;
-            background: var(--bg);
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            position: fixed;
+            background: var(--bg); color: #fff;
+            font-family: 'Inter', sans-serif; overflow: hidden; position: fixed;
         }
 
-        /* Динамічний фон з ефектом глибини */
-        .bg-overlay {
-            position: fixed; inset: 0;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(243, 186, 47, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(0, 255, 163, 0.03) 0%, transparent 40%);
-            z-index: -1;
-        }
-
-        /* Welcome Screen - Перше, що бачить юзер */
-        #welcome-screen {
+        /* ЕКРАН ПРИВІТАННЯ (WELCOME) */
+        #welcome-layer {
             position: fixed; inset: 0; z-index: 9999;
-            background: var(--bg);
+            background: radial-gradient(circle at center, #11141b 0%, #06070a 100%);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: all 1s cubic-bezier(0.9, 0, 0.1, 1);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .welcome-title {
-            font-family: var(--font-mono); font-size: 55px; font-weight: 900;
-            background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: -2px; margin-bottom: 5px;
+        .w-logo {
+            font-family: var(--font-mono); font-size: 50px; font-weight: 900;
+            color: var(--gold); text-shadow: 0 0 40px rgba(243, 186, 47, 0.4);
+            margin-bottom: 10px;
         }
 
-        .welcome-tag {
-            font-family: var(--font-code); font-size: 10px; color: var(--gold);
-            letter-spacing: 5px; text-transform: uppercase; margin-bottom: 60px;
+        .w-status {
+            font-family: 'JetBrains Mono', monospace; font-size: 10px;
+            color: var(--green); letter-spacing: 4px; margin-bottom: 60px;
         }
 
-        .init-btn {
-            background: none; border: 1px solid var(--gold);
-            color: var(--gold); font-family: var(--font-mono);
-            padding: 22px 60px; border-radius: 2px; /* Гострі кути для стилю */
-            font-size: 14px; font-weight: 700; cursor: pointer;
-            letter-spacing: 3px; position: relative; overflow: hidden;
-            transition: 0.4s;
+        .launch-btn {
+            background: var(--gold); color: #000; border: none;
+            padding: 22px 60px; border-radius: 12px;
+            font-family: var(--font-mono); font-weight: 900; font-size: 16px;
+            cursor: pointer; box-shadow: 0 0 30px rgba(243, 186, 47, 0.3);
+            transition: 0.3s;
         }
+        .launch-btn:active { transform: scale(0.95); opacity: 0.8; }
 
-        .init-btn:active { background: var(--gold); color: #000; box-shadow: 0 0 40px var(--gold); }
-        /* ГОЛОВНИЙ ТЕРМІНАЛ */
-        #main-app {
-            display: none; height: 100vh; width: 100%;
-            flex-direction: column; opacity: 0; transition: opacity 1s ease;
-        }
+        /* ОСНОВНИЙ ТЕРМІНАЛ */
+        #app-mount { display: none; height: 100vh; flex-direction: column; opacity: 0; transition: 0.5s; }
 
         header {
-            height: 90px; padding: 0 25px;
+            height: 85px; padding: 0 20px;
             display: flex; align-items: center; justify-content: space-between;
-            background: rgba(13, 17, 23, 0.8);
-            backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+            background: rgba(17, 20, 27, 0.8); backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
         }
 
-        /* МУЗИЧНИЙ ЦЕНТР */
-        .audio-engine {
-            display: flex; align-items: center; gap: 15px;
-            background: rgba(255,255,255,0.03); padding: 10px 20px;
-            border-radius: 12px; border: 1px solid var(--border);
+        .music-panel {
+            display: flex; align-items: center; gap: 12px;
+            background: rgba(255,255,255,0.03); padding: 10px 18px;
+            border-radius: 40px; border: 1px solid var(--border);
         }
         
-        .track-info { line-height: 1.2; }
-        .track-info .now-playing { font-size: 8px; color: var(--gold); font-family: var(--font-code); font-weight: 700; }
-        .track-info .song-name { font-size: 11px; font-weight: 800; max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .p-info { line-height: 1.1; }
+        .p-label { font-size: 8px; color: var(--gold); font-weight: 800; }
+        .p-name { font-size: 11px; font-weight: 800; max-width: 90px; white-space: nowrap; overflow: hidden; }
 
-        .audio-controls { display: flex; gap: 10px; font-size: 18px; cursor: pointer; }
+        .p-controls { display: flex; gap: 10px; font-size: 20px; cursor: pointer; }
+        /* КОНТЕНТНА ЗОНА */
+        .viewport { flex: 1; overflow-y: auto; padding: 25px 15px 160px; }
 
-        /* КОНТЕНТ */
-        .content-scroll {
-            flex: 1; overflow-y: auto; padding: 25px 20px 150px;
-            scrollbar-width: none;
-        }
-        .content-scroll::-webkit-scrollbar { display: none; }
-
-        .group-label {
+        .section-title {
             font-family: var(--font-mono); font-size: 10px; color: var(--gold);
             letter-spacing: 3px; margin: 30px 0 15px; display: flex; align-items: center; gap: 10px;
         }
-        .group-label::before { content: "["; }
-        .group-label::after { content: "------------------]"; flex: 1; }
+        .section-title::after { content: ""; height: 1px; flex: 1; background: var(--border); }
 
         /* КАРТКИ АКТИВІВ */
-        .asset-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-
-        .asset-box {
+        .asset-list { display: grid; gap: 10px; }
+        .asset-card {
             background: var(--card); border: 1px solid var(--border);
-            padding: 22px; border-radius: 4px; position: relative;
-            display: flex; justify-content: space-between; align-items: center;
-            transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            overflow: hidden;
+            padding: 20px; border-radius: 15px; display: flex;
+            justify-content: space-between; align-items: center;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
-        .asset-box::before {
-            content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 2px;
-            background: var(--gold); transform: scaleY(0); transition: 0.3s;
+        .asset-card.active {
+            border-color: var(--gold); background: rgba(243, 186, 47, 0.08);
+            transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
+        .asset-card .name { font-weight: 800; font-size: 16px; }
+        .asset-card .percent { font-family: var(--font-mono); color: var(--green); font-weight: 900; }
 
-        .asset-box.active {
-            background: var(--card-brighter); border-color: rgba(243, 186, 47, 0.3);
-            transform: translateX(8px);
+        /* ТАЙМФРЕЙМИ */
+        .tf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .tf-item {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 15px 5px; border-radius: 12px; text-align: center;
+            font-size: 11px; font-weight: 900; font-family: var(--font-mono);
         }
-        .asset-box.active::before { transform: scaleY(1); }
+        .tf-item.active { border-color: var(--gold); color: var(--gold); background: rgba(243, 186, 47, 0.15); }
 
-        .asset-name { font-family: var(--font-mono); font-size: 15px; font-weight: 700; }
-        .asset-status { font-family: var(--font-code); font-size: 9px; color: var(--green); margin-top: 4px; }
-        .asset-payout { font-family: var(--font-mono); font-size: 20px; font-weight: 900; color: var(--gold); }
-
-        /* АНАЛІТИЧНИЙ МОДУЛЬ */
-        #neural-modal {
-            position: fixed; inset: 0; z-index: 10000;
-            background: var(--bg); display: none;
-            flex-direction: column; align-items: center; justify-content: center;
+        /* МОДАЛКА АНАЛІЗУ */
+        #modal-overlay {
+            position: fixed; inset: 0; z-index: 10000; background: rgba(6, 7, 10, 0.98);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
             padding: 30px;
         }
+        .progress-group { width: 100%; margin-bottom: 25px; }
+        .progress-info { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 8px; color: #848e9c; font-weight: 800; }
+        .progress-track { height: 3px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.4s ease-out; box-shadow: 0 0 15px var(--gold); }
 
-        .scan-line {
-            width: 100%; height: 2px; background: var(--gold);
-            position: absolute; top: 0; left: 0; box-shadow: 0 0 20px var(--gold);
-            animation: scanMove 3s linear infinite; opacity: 0.5;
-        }
-
-        @keyframes scanMove {
-            0% { top: 0; } 100% { top: 100%; }
-        }
-
-        /* КНОПКА ЗАПУСКУ */
-        .action-area {
+        /* ФІКСОВАНА КНОПКА */
+        .footer-action {
             position: fixed; bottom: 0; width: 100%;
-            padding: 30px 20px 50px;
-            background: linear-gradient(to top, var(--bg) 70%, transparent);
+            padding: 30px 20px 50px; background: linear-gradient(to top, var(--bg) 70%, transparent);
             z-index: 100;
         }
-
-        .btn-execute {
-            width: 100%; padding: 25px; border: 1px solid var(--gold);
-            background: transparent; color: var(--gold);
-            font-family: var(--font-mono); font-weight: 900; font-size: 16px;
-            letter-spacing: 5px; text-transform: uppercase;
-            transition: 0.3s; cursor: pointer;
+        .main-btn {
+            width: 100%; padding: 25px; border: none; border-radius: 20px;
+            background: linear-gradient(45deg, var(--gold), #ff9f43);
+            color: #000; font-family: var(--font-mono); font-weight: 900; font-size: 18px;
+            box-shadow: 0 10px 40px rgba(243, 186, 47, 0.4);
         }
-        .btn-execute:active { background: var(--gold); color: #000; box-shadow: 0 0 50px rgba(243, 186, 47, 0.4); }
     </style>
 </head>
-    <body>
-    <div class="bg-overlay"></div>
-
-    <div id="welcome-screen">
-        <div class="welcome-title">KOTYOL</div>
-        <div class="welcome-tag">Neural Quantum Terminal</div>
-        <button class="init-btn" onclick="initSystem()">INITIALIZE SYSTEM</button>
+<body>
+    <div id="welcome-layer">
+        <div class="w-logo">KOTYOL AI</div>
+        <div class="w-status">SYSTEM READY // ENCRYPTED</div>
+        <button class="launch-btn" onclick="initTerminal()">LAUNCH SYSTEM</button>
     </div>
 
-    <div id="main-app">
+    <div id="app-mount">
         <header>
             <div class="brand">
-                <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 900; letter-spacing: -1px;">
-                    KOTYOL <span style="color: var(--gold);">PRO</span>
-                </div>
-                <div style="font-family: var(--font-code); font-size: 7px; color: var(--green); letter-spacing: 2px;">STATUS: CONNECTED</div>
+                <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 900;">KOTYOL <span style="color: var(--gold);">PRO</span></div>
+                <div style="font-size: 8px; color: var(--green); letter-spacing: 2px; font-weight: 800;">NEURAL CORE ACTIVE</div>
             </div>
 
-            <div class="audio-engine">
-                <div class="audio-controls" onclick="prevTrack()">⏮</div>
-                <div class="track-info" style="text-align: center;">
-                    <div class="now-playing">NOW STREAMING</div>
-                    <div id="track-name" class="song-name">Loading...</div>
+            <div class="music-panel">
+                <div class="p-controls" onclick="changeTrack(-1)">⏮</div>
+                <div class="p-info">
+                    <div class="p-label">NOW PLAYING</div>
+                    <div id="track-title" class="p-name">Loading...</div>
                 </div>
-                <div class="audio-controls" id="play-pause" onclick="toggleAudio()">▶</div>
-                <div class="audio-controls" onclick="nextTrack()">⏭</div>
+                <div class="p-controls" id="play-trigger" onclick="togglePlayback()">▶</div>
+                <div class="p-controls" onclick="changeTrack(1)">⏭</div>
             </div>
         </header>
 
-        <div class="content-scroll">
-            <div class="group-label">CRYPTO ASSETS</div>
-            <div class="asset-grid" id="list-crypto"></div>
+        <div class="viewport">
+            <div class="section-title">CRYPTO ASSETS</div>
+            <div class="asset-list" id="crypto-list"></div>
 
-            <div class="group-label">FOREX CURRENCIES</div>
-            <div class="asset-grid" id="list-forex"></div>
+            <div class="section-title">CURRENCIES</div>
+            <div class="asset-list" id="forex-list"></div>
 
-            <div class="group-label">COMMODITIES</div>
-            <div class="asset-grid" id="list-commodities"></div>
-
-            <div class="group-label">EXPIRATION WINDOW</div>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-                <div class="asset-box" style="padding: 15px; justify-content: center;" onclick="setTF('5s', this)">
-                    <span style="font-family: var(--font-mono); font-size: 12px;">5s</span>
-                </div>
-                <div class="asset-box active" style="padding: 15px; justify-content: center;" id="default-tf" onclick="setTF('1M', this)">
-                    <span style="font-family: var(--font-mono); font-size: 12px;">1M</span>
-                </div>
-                <div class="asset-box" style="padding: 15px; justify-content: center;" onclick="setTF('5M', this)">
-                    <span style="font-family: var(--font-mono); font-size: 12px;">5M</span>
-                </div>
-                <div class="asset-box" style="padding: 15px; justify-content: center;" onclick="setTF('15M', this)">
-                    <span style="font-family: var(--font-mono); font-size: 12px;">15M</span>
-                </div>
+            <div class="section-title">EXPIRATION</div>
+            <div class="tf-grid">
+                <div class="tf-item" onclick="setTF('5s', this)">5s</div>
+                <div class="tf-item" onclick="setTF('15s', this)">15s</div>
+                <div class="tf-item active" onclick="setTF('1M', this)">1M</div>
+                <div class="tf-item" onclick="setTF('5M', this)">5M</div>
             </div>
         </div>
 
-        <div class="action-area">
-            <button class="btn-execute" onclick="executeNeuralScan()">Execute Neural Scan</button>
+        <div class="footer-action">
+            <button class="main-btn" onclick="runAnalysis()">EXECUTE SCAN</button>
         </div>
     </div>
 
-    <div id="neural-modal">
-        <div class="scan-line"></div>
-        <div id="modal-container" style="width: 100%; max-width: 400px; text-align: center; position: relative; z-index: 1;">
+    <div id="modal-overlay">
+        <div id="modal-content" style="width: 100%; max-width: 400px; text-align: center;">
             </div>
     </div>
 
-    <audio id="core-audio" crossorigin="anonymous"></audio>
-        <script>
+    <audio id="bg-audio" loop preload="auto"></audio>
+    <script>
         // БАЗА АКТИВІВ
         const assets = {
             crypto: [
-                { name: "BITCOIN", rate: "94%" }, { name: "ETHEREUM", rate: "92%" },
-                { name: "SOLANA", rate: "95%" }, { name: "LITECOIN", rate: "91%" }
+                { n: "BITCOIN OTC", p: "94%" }, { n: "ETHEREUM OTC", p: "92%" },
+                { n: "SOLANA OTC", p: "95%" }, { n: "LITECOIN OTC", p: "91%" }
             ],
             forex: [
-                { name: "EUR/USD", rate: "92%" }, { name: "GBP/USD", rate: "91%" },
-                { name: "USD/JPY", rate: "93%" }, { name: "AUD/CAD", rate: "89%" }
-            ],
-            commodities: [
-                { name: "GOLD", rate: "96%" }, { name: "SILVER", rate: "88%" },
-                { name: "CRUDE OIL", rate: "91%" }
+                { n: "EUR/USD OTC", p: "92%" }, { n: "GBP/USD OTC", p: "91%" },
+                { n: "USD/JPY OTC", p: "93%" }, { n: "AUD/CAD OTC", p: "89%" }
             ]
         };
 
-        // МУЗИЧНИЙ ПЛЕЙЛИСТ (Популярні інструментали/Lo-Fi)
+        // ПЛЕЙЛИСТ (Прямі лінки на популярні треки)
         const playlist = [
-            { name: "Cyber Dreams", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-            { name: "Neon City", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-            { name: "Quantum Flow", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
-            { name: "Matrix Beat", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" }
+            { name: "Blinding Lights", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            { name: "Starboy", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+            { name: "Get Lucky", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+            { name: "Nightcall", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" }
         ];
 
         let currentTrack = 0;
-        let selectedAsset = "";
+        let selectedPair = "";
         let selectedTF = "1M";
-        const audio = document.getElementById('core-audio');
+        const audio = document.getElementById('bg-audio');
 
-        // ІНІЦІАЛІЗАЦІЯ СИСТЕМИ
-        function initSystem() {
-            document.getElementById('welcome-screen').style.transform = 'translateY(-100%)';
-            document.getElementById('main-app').style.display = 'flex';
-            setTimeout(() => { document.getElementById('main-app').style.opacity = '1'; }, 50);
-            
+        // ЗАПУСК СИСТЕМИ
+        function initTerminal() {
+            document.getElementById('welcome-layer').style.transform = 'translateY(-100%)';
+            const app = document.getElementById('app-mount');
+            app.style.display = 'flex';
+            setTimeout(() => app.style.opacity = '1', 50);
+
+            // Розблокування та запуск музики
             loadTrack(currentTrack);
-            renderAllAssets();
+            renderAssets();
         }
 
         // МУЗИЧНА ЛОГІКА
-        function loadTrack(index) {
-            audio.src = playlist[index].url;
-            document.getElementById('track-name').innerText = playlist[index].name;
-            if (index > 0 || audio.paused) toggleAudio();
+        function loadTrack(idx) {
+            audio.src = playlist[idx].url;
+            document.getElementById('track-title').innerText = playlist[idx].name;
+            audio.play().catch(() => console.log("Музика чекає кліку"));
+            document.getElementById('play-trigger').innerText = "⏸";
         }
 
-        function toggleAudio() {
-            const btn = document.getElementById('play-pause');
+        function togglePlayback() {
             if (audio.paused) {
                 audio.play();
-                btn.innerText = "⏸";
+                document.getElementById('play-trigger').innerText = "⏸";
             } else {
                 audio.pause();
-                btn.innerText = "▶";
+                document.getElementById('play-trigger').innerText = "▶";
             }
         }
 
-        function nextTrack() {
-            currentTrack = (currentTrack + 1) % playlist.length;
+        function changeTrack(dir) {
+            currentTrack = (currentTrack + dir + playlist.length) % playlist.length;
             loadTrack(currentTrack);
         }
 
-        function prevTrack() {
-            currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
-            loadTrack(currentTrack);
-        }
-
-        // ЛОГІКА АКТИВІВ
-        function renderAllAssets() {
-            for (let cat in assets) {
-                const container = document.getElementById(`list-${cat}`);
-                container.innerHTML = assets[cat].map(a => `
-                    <div class="asset-box" onclick="selectAsset('${a.name}', this)">
-                        <div>
-                            <div class="asset-name">${a.name}</div>
-                            <div class="asset-status">● LIVE STREAMING</div>
-                        </div>
-                        <div class="asset-payout">${a.rate}</div>
+        // КЕРУВАННЯ АКТИВАМИ
+        function renderAssets() {
+            for (let key in assets) {
+                const container = document.getElementById(`${key}-list`);
+                container.innerHTML = assets[key].map(a => `
+                    <div class="asset-card" onclick="selectAsset('${a.n}', this)">
+                        <span class="name">${a.n}</span>
+                        <span class="percent">${a.p}</span>
                     </div>
                 `).join('');
             }
         }
 
         function selectAsset(name, el) {
-            document.querySelectorAll('.asset-box').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.asset-card').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
-            selectedAsset = name;
+            selectedPair = name;
         }
 
         function setTF(tf, el) {
-            el.parentElement.querySelectorAll('.asset-box').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tf-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             selectedTF = tf;
         }
 
-        // НЕЙРОННИЙ СКАНЕР (РОЗЙОБНИЙ ВІЗУАЛ)
-        function executeNeuralScan() {
-            if (!selectedAsset) { alert("SELECT ASSET PROTOCOL FIRST"); return; }
+        // НЕЙРОННИЙ АНАЛІЗ (ШКАЛИ)
+        function runAnalysis() {
+            if (!selectedPair) return alert("ОБЕРИ АКТИВ!");
 
-            const modal = document.getElementById('neural-modal');
-            const container = document.getElementById('modal-container');
-            modal.style.display = 'flex';
+            const overlay = document.getElementById('modal-overlay');
+            const content = document.getElementById('modal-content');
+            overlay.style.display = 'flex';
 
-            container.innerHTML = `
-                <div style="font-family: var(--font-mono); color: var(--gold); font-size: 20px; letter-spacing: 5px; margin-bottom: 40px;">SCANNING ${selectedAsset}</div>
+            content.innerHTML = `
+                <h2 style="font-family:var(--font-mono); color:var(--gold); margin-bottom:35px; letter-spacing:2px;">SCANNING ${selectedPair}</h2>
                 
-                <div style="text-align: left; margin-bottom: 25px;">
-                    <div style="display:flex; justify-content:space-between; font-size:10px; font-family:var(--font-code); color:var(--gold); margin-bottom:8px;">
-                        <span>NEURAL LOAD</span><span id="p1">0%</span>
-                    </div>
-                    <div style="height:2px; background:rgba(255,255,255,0.05); width:100%;"><div id="b1" style="height:100%; width:0%; background:var(--gold); transition:0.8s; box-shadow:0 0 15px var(--gold);"></div></div>
+                <div class="progress-group">
+                    <div class="progress-info"><span>AI CORE PROCESSING</span><span id="v1">0%</span></div>
+                    <div class="progress-track"><div class="progress-fill" id="f1"></div></div>
                 </div>
-
-                <div style="text-align: left; margin-bottom: 25px;">
-                    <div style="display:flex; justify-content:space-between; font-size:10px; font-family:var(--font-code); color:var(--gold); margin-bottom:8px;">
-                        <span>LIQUIDITY CLOUD</span><span id="p2">0%</span>
-                    </div>
-                    <div style="height:2px; background:rgba(255,255,255,0.05); width:100%;"><div id="b2" style="height:100%; width:0%; background:var(--gold); transition:1.2s; box-shadow:0 0 15px var(--gold);"></div></div>
+                <div class="progress-group">
+                    <div class="progress-info"><span>VOLATILITY CHECK</span><span id="v2">0%</span></div>
+                    <div class="progress-track"><div class="progress-fill" id="f2"></div></div>
                 </div>
-
-                <div style="text-align: left; margin-bottom: 40px;">
-                    <div style="display:flex; justify-content:space-between; font-size:10px; font-family:var(--font-code); color:var(--gold); margin-bottom:8px;">
-                        <span>QUANTUM PROBABILITY</span><span id="p3">0%</span>
-                    </div>
-                    <div style="height:2px; background:rgba(255,255,255,0.05); width:100%;"><div id="b3" style="height:100%; width:0%; background:var(--gold); transition:1.5s; box-shadow:0 0 15px var(--gold);"></div></div>
+                <div class="progress-group" style="margin-bottom:40px;">
+                    <div class="progress-info"><span>QUANTUM RESULT</span><span id="v3">0%</span></div>
+                    <div class="progress-track"><div class="progress-fill" id="f3"></div></div>
                 </div>
-
-                <div id="scan-log" style="font-family:var(--font-code); font-size:9px; color:var(--green); text-transform:uppercase;">Initializing connection...</div>
+                <div id="status-log" style="font-size:9px; color:var(--green); font-family:monospace; text-transform:uppercase;">Initializing neural bridge...</div>
             `;
 
-            const fill = (barId, valId, logText, time) => {
+            const fill = (f, v, log, time) => {
                 setTimeout(() => {
-                    document.getElementById(barId).style.width = "100%";
-                    document.getElementById(valId).innerText = "100%";
-                    document.getElementById('scan-log').innerText = logText;
+                    document.getElementById(f).style.width = "100%";
+                    document.getElementById(v).innerText = "100%";
+                    document.getElementById('status-log').innerText = log;
                 }, time);
             };
 
-            fill('b1', 'p1', 'Scanning Order Book...', 500);
-            fill('b2', 'p2', 'Analyzing Volume...', 1400);
-            fill('b3', 'p3', 'Signal Generated!', 2600);
+            fill('f1', 'v1', 'ANALYZING CANDLE PATTERNS...', 600);
+            fill('f2', 'v2', 'CALCULATING PROBABILITY...', 1400);
+            fill('f3', 'v3', 'SIGNAL GENERATED!', 2400);
 
             setTimeout(() => {
-                const isCall = Math.random() > 0.48;
-                const resultSide = isCall ? "CALL ▲" : "PUT ▼";
-                const resultColor = isCall ? "var(--green)" : "var(--red)";
-                const accuracy = (94 + Math.random() * 5.8).toFixed(1);
+                const isCall = Math.random() > 0.49;
+                const side = isCall ? "CALL ▲" : "PUT ▼";
+                const color = isCall ? "var(--green)" : "var(--red)";
+                const acc = (94 + Math.random() * 5.5).toFixed(1);
 
-                container.innerHTML = `
-                    <div style="font-family: var(--font-mono); font-size: 10px; color: var(--gold); letter-spacing: 2px;">NEURAL PREDICTION</div>
-                    <div style="font-size: 75px; font-weight: 900; font-family: var(--font-mono); color: ${resultColor}; text-shadow: 0 0 40px ${resultColor}; margin: 20px 0;">${resultSide}</div>
-                    <div style="background: rgba(255,255,255,0.03); padding: 20px; border: 1px solid var(--border); margin-bottom: 30px;">
-                        <div style="font-size: 9px; color: var(--gold); font-family: var(--font-code); margin-bottom: 5px;">CONFIDENCE SCORE</div>
-                        <div style="font-size: 28px; font-family: var(--font-mono); font-weight: 900;">${accuracy}%</div>
+                content.innerHTML = `
+                    <div style="font-family:var(--font-mono); font-size:10px; color:var(--gold); letter-spacing:3px;">NEURAL PREDICTION</div>
+                    <div style="font-size:75px; font-weight:900; font-family:var(--font-mono); color:${color}; text-shadow:0 0 40px ${color}; margin:20px 0;">${side}</div>
+                    <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:20px; border-radius:15px; margin-bottom:30px;">
+                        <div style="font-size:9px; color:#848e9c; margin-bottom:5px;">AI CONFIDENCE</div>
+                        <div style="font-size:28px; font-family:var(--font-mono); font-weight:900; color:var(--gold);">${acc}%</div>
                     </div>
-                    <button class="btn-execute" onclick="document.getElementById('neural-modal').style.display='none'">CLOSE TERMINAL</button>
+                    <button class="main-btn" onclick="document.getElementById('modal-overlay').style.display='none'">CONFIRM ENTRY</button>
                 `;
-            }, 3500);
+            }, 3200);
         }
     </script>
 </body>
